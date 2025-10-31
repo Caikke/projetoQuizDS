@@ -49,6 +49,9 @@ idQuestao03 INT,
 idQuestao04 INT,
 idQuestao05 INT,
 pontuacao int default 0,
+FOREIGN KEY (idUsuario) REFERENCES Usuario(id)
+ON UPDATE CASCADE
+ON DELETE SET NULL,
 FOREIGN KEY (idCurso) REFERENCES Curso(id)
 ON UPDATE CASCADE
 ON DELETE SET NULL,
@@ -81,6 +84,25 @@ FOREIGN KEY (idQuestao) REFERENCES Questoes(id)
 ON UPDATE CASCADE
 ON DELETE CASCADE
 );
+
+INSERT INTO Curso (curso, sigla) VALUES ('Desenvolvimento de Sistemas', 'DS');
+INSERT INTO Disciplina( disciplina, idCurso, sigla) VALUES 
+('Análise e Projeto de Sistemas', 1, 'APS'),
+('Banco de Dados', 1, 'BD'),
+('Desenvolvimento de Sistemas', 1, 'DS'),
+('Programação de Aplicativos Mobile', 1, 'PAM'),
+('Programação Web', 1, 'PW'),
+('Operação de Software Aplicativo', 1,'OSA'),
+('Análise e Projeto de Sistema', 1,'APS'),
+('Sistemas Embarcados',1,'SE'),
+('Segurança de Sistemss de Informação',1,'SSI'),
+('Internet e Protocolos',1,'IP'),
+('Linguagem , Trabalho e Tecnologia', 1,'LTT'),
+('Inglês Instrumental',1,'II'),
+('Design Digital',1,'DD'),
+('Ética e Cidadania Organizacional',1,'ECO');
+
+use projetoQuiz;
 
 ################# CURSO ##########################################
 DELIMITER //
@@ -381,12 +403,4 @@ BEGIN
     ORDER BY pontuacao DESC;
 END //
 DELIMITER ;
-
-INSERT INTO Curso (curso, sigla) VALUES ('Desenvolvimento de Sistemas', 'DS');
-INSERT INTO Disciplina( disciplina, idCurso, sigla) VALUES 
-('Análise e Projeto de Sistemas', 1, 'APS'),
-('Banco de Dados', 1, 'BD'),
-('Desenvolvimento de Sistemas', 1, 'DS'),
-('Programação de Aplicativos Mobile', 1, 'PAM'),
-('Programação Web', 1, 'PW');
 
