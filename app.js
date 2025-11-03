@@ -12,10 +12,10 @@ app.use(express.static(path.join(__dirname, 'views')));
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'index.html'));
 });
-app.get('/', (req, res) => {
+app.get('/login', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'login.html'));
 });
-app.get('/', (req, res) => {
+app.get('/cadastro', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'cadastro.html'));
 });
 
