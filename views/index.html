@@ -5,11 +5,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css">
-    <link rel="stylesheet" href="principal.css">
+    <link rel="stylesheet" href="./css/principal.css">
     <title>Quiz Educacional</title>
 </head>
 
 <body>
+
+    <header class="navbar">
+        <div class="logo-container">
+            <img src="./img/LogoEtec.png" alt="Logo etec" class="logo-etec">
+            <div class="logo">Quiz Interativo</div>
+        </div>
+
+        <nav>
+            <a href="./index.html" class="linkT">Início</a>
+            <a href="./sobre.html" class="linkT">Sobre</a>
+            <button id="botao"><a href="./login.html" class="login-btn">Login</a></button>
+        </nav>
+    </header>
 
     <form>
         <main class="container" id="inicio-secao">
@@ -20,11 +33,11 @@
             <p id="Sobre2Texto">Antes de jogar <b id="negrito">crie sua conta</b> no <b id>cadastrar</b>, caso não tenha
                 uma.</p>
             <br>
-            <button class="login" type="submit"><b id="negrito2"><a href="login.html">Login</b></button>
+            <button class="login" type="submit"><b id="negrito2"><a href="./login.html">Login</b></button>
             <br>
             <br>
-            <div> <button class="cadastrar" type="submit"><b id="negrito2"><a href="cadastro.html"></a>Cadastrar</b></button></div>
-            <p></p>
+            <div> <button class="cadastrar" type="submit"><b id="negrito2"><a
+                            href="./cadastro.html">Cadastrar</b></button></div>
 
             <div class="register-link">
             </div>
@@ -33,18 +46,6 @@
     </form>
     </main>
 
-    <header class="navbar">
-        <div class="logo-container">
-            <img src="LogoEtec.png" alt="Logo etec" class="logo-etec">
-            <div class="logo">Quiz Interativo</div>
-        </div>
-
-        <nav>
-            <a href="principal.html" class="linkT">Início</a>
-            <a href="#sobre.html" class="linkT">Sobre</a>
-            <button id="botao"><a href="login.html" class="login-btn">Entrar</a></button>
-        </nav>
-    </header>
-
 </body>
+
 </html>

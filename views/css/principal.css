@@ -123,6 +123,7 @@ a:hover{
     left: 0;
     width: 100%;
     z-index: 10;
+ }
 
  #botao{
     background: #02abab;
@@ -159,4 +160,4 @@ color: #000000;
     cursor: pointer; 
     transition: background-color 0.3s ease; 
 } 
- }
+ 
