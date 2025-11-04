@@ -18,6 +18,9 @@ app.get('/login', (req, res) => {
 app.get('/cadastro', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'cadastro.html'));
 });
+app.get('/redefinir-senha', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'redefinir-senha.html'));
+});
 
 
 app.listen(PORT, () => {
