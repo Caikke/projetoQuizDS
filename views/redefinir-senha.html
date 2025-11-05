@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Criar nova senha</title>
-  <link rel="stylesheet" href="css/redefinir-senha.css">
+  <link rel="stylesheet" href="./css/redefinir-senha.css">
 </head>
+
 <body>
   <div class="container">
     <h2 class="titulo-principal">QUIZ</h2>
@@ -21,12 +23,12 @@
       <button type="submit">REDEFINIR SENHA</button>
     </form>
 
-    <a href="login.html" class="voltar-login">Voltar para o login</a>
+    <a href="./login.html" class="voltar-login">Voltar para o login</a>
   </div>
 
   <script>
     const form = document.getElementById('form-redefinir');
-    form.addEventListener('submit', function(event) {
+    form.addEventListener('submit', function (event) {
       event.preventDefault();
       const senha = document.getElementById('nova-senha').value;
       const confirmar = document.getElementById('confirmar-senha').value;
@@ -40,4 +42,5 @@
     });
   </script>
 </body>
+
 </html>

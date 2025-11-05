@@ -1,18 +1,20 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login | Quiz ETEC</title>
-  <link rel="stylesheet" href="css/login.css">
+  <link rel="stylesheet" href="./css/login.css">
 </head>
+
 <body>
   <div class="background"></div>
 
   <div class="login-container">
     <div class="left">
       <h1><span>QUIZ</span></h1>
-        
+
       <h2>Login</h2>
       <br>
       <form>
@@ -30,14 +32,14 @@
 
         <div class="option">
           <!-- QUANDO CLICADO VAI PARA A TELA DE ESQUECISENHA  -->
-          <a href="esquecisenha.html">Esqueceu sua senha?</a>
+          <a href="./esquecisenha.html">Esqueceu sua senha?</a>
         </div>
         <!-- QUANDO CLICADO, VÊ SE TEM REALMENTE ESSE LOGIN E VAI PARA A TELA INICIAL DO QUIZ  -->
-    <button type="button" id="btnLogin" class="btn-login">Login</button>
+        <button type="button" id="btnLogin" class="btn-login">Login</button>
 
 
         <!-- CASO ELE NÃO TENHA UMA CONTA, QUANDO CLICAR VAI PARA A TELA DE CADFASTRO -->
-        <p class="signup">Ou <a href="cadastro.html">inscrever-se</a></p>
+        <p class="signup">Ou <a href="./cadastro.html">inscrever-se</a></p>
       </form>
     </div>
 
@@ -48,43 +50,44 @@
   </div>
 </body>
 <script>
-      const btnLogin = document.getElementById("btnLogin");
+  const btnLogin = document.getElementById("btnLogin");
 
-     btnLogin.addEventListener('click', async function (e) {
-      
-      e.preventDefault(); 
+  btnLogin.addEventListener('click', async function (e) {
 
-      const email = document.getElementById('email').value;
-      const senha = document.getElementById('senha').value;
+    e.preventDefault();
 
-      try {
-        
-        const response = await fetch('/api/produtos', {
+    const email = document.getElementById('email').value;
+    const senha = document.getElementById('senha').value;
 
-          method : 'POST', 
-          headers: {'Content-Type' : 'application/json'}, 
-          body: JSON.stringify({email, senha})
+    try {
 
-        }); 
+      const response = await fetch('/api/produtos', {
 
-        if(response.ok){
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, senha })
 
-          alert('Produto criado com sucesso.');
-          btnLogin.reset();
-          loadProductos();
-        }else{
+      });
 
-          alert ('Erro ao criar produtos.');
-        }
+      if (response.ok) {
 
-      } catch (error) {
-        
-        alert('Erro de comunicação com o servidor.')
+        alert('Produto criado com sucesso.');
+        btnLogin.reset();
+        loadProductos();
+      } else {
+
+        alert('Erro ao criar produtos.');
       }
 
+    } catch (error) {
+
+      alert('Erro de comunicação com o servidor.')
+    }
 
 
-    })
+
+  })
 
 </script>
+
 </html>

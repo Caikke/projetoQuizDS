@@ -21,7 +21,9 @@ app.get('/cadastro', (req, res) => {
 app.get('/redefinir-senha', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'redefinir-senha.html'));
 });
-
+app.get('/sobre', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'sobre.html'));
+});
 
 app.listen(PORT, () => {
         console.log(`Servidor rodando em http://localhost:${PORT}`);
