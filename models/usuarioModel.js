@@ -2,7 +2,7 @@
 function registarUsuario(nome, email, senha){
     const existe = usuarios.find(u=> u.email === email)
         if(existe){
-            console.log ("usario ja registrado")
+            console.log ("Usuário ja registrado")
             return;
         }
 
@@ -14,7 +14,7 @@ function registarUsuario(nome, email, senha){
             
         };
         usuarios.push(novoUsuario);
-        console.log(`Usuário "${nome}" registrado com sucesso!`);
+        console.log(`Usuário ${nome} registrado com sucesso!`);
 
         //função para login
 }
