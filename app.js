@@ -4,9 +4,15 @@ const app = express()
 
 const PORT = 3000
 
+const usuarioRoute = require("./routes/usuarioRoute")
+
 // AQUI PARA VOCÊ CONECTAR A PASTA VIEWS E INDEX-------------
 // Permite acessar arquivos estáticos da pasta views (ex: CSS, JS)
 app.use(express.static(path.join(__dirname, 'views')));
+
+app.use(express.json())
+
+app.use(usuarioRoute)
 
 // Rotas para cada página
 app.get('/', (req, res) => {

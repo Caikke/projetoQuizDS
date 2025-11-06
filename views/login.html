@@ -17,17 +17,17 @@
 
       <h2>Login</h2>
       <br>
-      <form>
+      <form id="form-login">
         <!-- INPUT PARA O USUÁRIO DIGITAR O EMAIL DELE  -->
         <div class="input-group">
           <label for="email">Usuário</label>
-          <input type="text" id="email" placeholder="Digite seu usuário">
+          <input type="text" id="email" placeholder="Digite seu usuário" required>
         </div>
 
         <div class="input-group">
           <!-- INPUT PARA O USUÁRIO DIGITAR A SENHA DELE  -->
           <label for="senha">Senha</label>
-          <input type="password" id="senha" placeholder="Digite sua senha">
+          <input type="password" id="senha" placeholder="Digite sua senha" required>
         </div>
 
         <div class="option">
@@ -35,11 +35,11 @@
           <a href="./esquecisenha.html">Esqueceu sua senha?</a>
         </div>
         <!-- QUANDO CLICADO, VÊ SE TEM REALMENTE ESSE LOGIN E VAI PARA A TELA INICIAL DO QUIZ  -->
-        <button type="button" id="btnLogin" class="btn-login">Login</button>
+        <button type="submit" id="btnLogin" class="btn-login">Login</button>
 
 
         <!-- CASO ELE NÃO TENHA UMA CONTA, QUANDO CLICAR VAI PARA A TELA DE CADFASTRO -->
-        <p class="signup">Ou <a href="./cadastro.html">inscrever-se</a></p>
+        <p class="signup">Ou <a href="/cadastro">inscrever-se</a></p>
       </form>
     </div>
 
@@ -50,41 +50,40 @@
   </div>
 </body>
 <script>
-  const btnLogin = document.getElementById("btnLogin");
 
-  btnLogin.addEventListener('click', async function (e) {
+  const btnLogin = document.querySelector("#form-login")
 
-    e.preventDefault();
+    btnLogin.addEventListener("submit", async e => {
 
-    const email = document.getElementById('email').value;
-    const senha = document.getElementById('senha').value;
+    e.preventDefault()
 
-    try {
+    const email = document.querySelector("#email").value
+    const senha = document.querySelector("#senha").value
 
-      const response = await fetch('/api/produtos', {
+    await fetch("/api/login", {
+      method: "POST",
+      headers: {
+        "content-Type":"application/json"
+      },
 
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, senha })
-
-      });
-
-      if (response.ok) {
-
-        alert('Produto criado com sucesso.');
-        btnLogin.reset();
-        loadProductos();
-      } else {
-
-        alert('Erro ao criar produtos.');
+      body: JSON.stringify({
+        email: email,
+        senha: senha
+      })
+    })
+    .then((response) => {
+      if(response.status === 200){
+        alert("Logado com sucesso")
+        location.href = "/"
+      }else{
+        alert("email ou senha invalidos")
       }
+      return response.json()
+    })
+    .then((res) => console.log(res))
+    .catch((err) => alert("falha no login", err))
 
-    } catch (error) {
-
-      alert('Erro de comunicação com o servidor.')
-    }
-
-
+    e.target.reset()
 
   })
 
