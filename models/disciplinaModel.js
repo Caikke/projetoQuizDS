@@ -1,36 +1,40 @@
 const connection = require("../config/db");
 
 
-const selectDisciplinas = async () => {
-    return (await connection).execute("CALL SelectDisciplina()"); //Listar disciplina
+const consultarDisciplina = async () => {
+    return (await connection).execute("CALL SelectDisciplina()");
 };
 
 
-const insertDisciplina = async (disciplina) => {
-    return (await connection).execute("CALL InsertDisciplina(?, ?, ?)", [ // Cria uma nova disciplina
-        disciplina.nome,
-        disciplina.curso_id,
-        disciplina.sigla
-    ]);
+const novaDisciplina = async (disciplina) => {
+    return (await connection).execute(
+        "CALL InsertDisciplina(?, ?, ?)",
+        [disciplina.nome, disciplina.curso_id, disciplina.sigla]
+    );
 };
 
-const updateDisciplina = async (disciplina) => {
-    return (await connection).execute("CALL UpdateDisciplina(?, ?, ?, ?)", [ // Atualiza uma disciplina
-        disciplina.id,
-        disciplina.nome,
-        disciplina.curso_id,
-        disciplina.sigla
-    ]);
+const atualizarDisciplina = async (disciplina) => {
+    return (await connection).execute(
+        "CALL UpdateDisciplina(?, ?, ?, ?)",
+        [disciplina.id, disciplina.nome, disciplina.curso_id, disciplina.sigla]
+    );
 };
 
+const deletarDisciplina = async (id) => {
+    return (await connection).execute("CALL DeleteDisciplina(?)", [id]);
+};
 
-const deleteDisciplina = async (id) => {
-    return (await connection).execute("CALL DeleteDisciplina(?)", [id]); // Deleta uma disciplina
+//Adicionado consultar disciplina por id do curso
+const consultarDisciplinaPorIDCurso = async (id) => {
+    const sql = 'SELECT * FROM disciplina WHERE curso_id = ?';
+    const res = (await db).execute(sql, [id]);
+    return res;
 };
 
 module.exports = {
-    selectDisciplinas,
-    insertDisciplina,
-    updateDisciplina,
-    deleteDisciplina
+    consultarDisciplina,
+    novaDisciplina,
+    atualizarDisciplina,
+    deletarDisciplina,
+    consultarDisciplinaPorIDCurso
 };
