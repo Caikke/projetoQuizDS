@@ -9,13 +9,5 @@ const connection = mysql.createConnection({
     database: process.env.DB_DATABASE,
   });
    
-  connection.connect((err) => {
-   if (err) {
-    console.error('Erro de conexão: ' + err.stack);
-    return;
-   }
-   console.log('Conectado como ID ' + connection.threadID);
-  });
-   
   module.exports = connection;
    

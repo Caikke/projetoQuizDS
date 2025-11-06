@@ -1,24 +1,17 @@
+const connection = require("../config/db")
+
+
+const usuarioModel = {
 //função regististrar usuario
-function registarUsuario(nome, email, senha){
-    const existe = usuarios.find(u=> u.email === email)
-        if(existe){
-            console.log ("Usuário ja registrado")
-            return;
-        }
+ registarUsuario: async (usuario) => {
+    return (await connection).execute(
+            "INSERT INTO usuario (login, email, senha) VALUES (?, ?, ?)",
+            [usuario.login, usuario.email, usuario.senha]
+        );
 
-        const novoUsuario ={
-            nome,
-            email,
-            senha,
-            pontuacao:0
-            
-        };
-        usuarios.push(novoUsuario);
-        console.log(`Usuário ${nome} registrado com sucesso!`);
-
+},
         //função para login
-}
- function login(email, senha){
+  login: async (email, senha) => {
     const usuario = usuario.find(u => u.email === email && u.senha === senha);
     const verificarSenha = senha.find(u=>u.senha === senha);
     if(!verificarSenha){
@@ -31,9 +24,18 @@ function registarUsuario(nome, email, senha){
     }
     console.log(`Bem vindo(a), ${usuario.nome}!`);
     return usuario;
- }
-function adicionarPontos(usuario, pontos){
+ },
+
+ adicionarPontos: async (usuario, pontos) =>{
     usario.pontuacao += pontos;
     console.log(`pontuação atual ${usuario.pontos}`);
+},
+
+pegarUsuarioPeloEmail: async (email) => {
+        return (await connection).execute("SELECT * FROM usuario WHERE email = ?", [email]);
+    }
+
 }
+
+module.exports = usuarioModel
 
