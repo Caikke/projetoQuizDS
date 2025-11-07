@@ -1,52 +1,94 @@
 const model = require("../models/disciplinaModel");
 
-//GET - listar disciplia
-const getDisciplinas = async (req, res) => {
+// GET - Listar disciplinas
+const consultarDisciplina = async (req, res) => {
     try {
-        const [rows] = await model.selectDisciplinas();
-        res.json(rows);
+        const [rows] = await model.consultarDisciplina(); 
+        res.status(200).json(rows);
     } catch (error) {
-        res.status(500).json({ error: "Erro ao buscar" });
+        console.error("Erro ao buscar disciplinas:", error);
+        res.status(500).json({ error: "Erro ao buscar disciplinas." });
     }
 };
 
-//POST - criar disciplina
-const createDisciplinas = async (req, res) => {
+// POST - Criar nova disciplina
+const novaDisciplina = async (req, res) => {
     const { nome, curso_id, sigla } = req.body;
+
+    if (!nome || !curso_id || !sigla) {
+        return res.status(400).json({ error: "Todos os campos são obrigatórios." });
+    }
+
     try {
-        await model.insertDisciplina({ nome, curso_id, sigla });
-        res.status(201).json({ message: "Disciplina criada!" });
+        await model.novaDisciplina({ nome, curso_id, sigla });
+        res.status(201).json({ message: "Disciplina criada com sucesso!" });
     } catch (error) {
+        console.error("Erro ao criar disciplina:", error);
         res.status(500).json({ error: "Erro ao criar disciplina." });
     }
 };
 
-//PUT - atualizar discipina
-const updateDisciplinas = async (req, res) => {
+// PUT - Atualizar disciplina
+const atualizarDisciplina = async (req, res) => {
     const { id } = req.params;
     const { nome, curso_id, sigla } = req.body;
+
+    if (!id || !nome || !curso_id || !sigla) {
+        return res.status(400).json({ error: "Todos os campos são obrigatórios." });
+    }
+
     try {
-        await model.updateDisciplina({ id, nome, curso_id, sigla });
-        res.json({ message: "Disciplina atualizada com sucesso!" });
+        await model.atualizarDisciplina({ id, nome, curso_id, sigla });
+        res.status(200).json({ message: "Disciplina atualizada com sucesso!" });
     } catch (error) {
+        console.error("Erro ao atualizar disciplina:", error);
         res.status(500).json({ error: "Erro ao atualizar disciplina." });
     }
 };
 
-// DELETE - Deletar disiciplina
-const deleteDisciplina = async (req, res) => {
+// DELETE - Excluir disciplina
+const deletarDisciplina = async (req, res) => {
     const { id } = req.params;
+
+    if (!id) {
+        return res.status(400).json({ error: "ID é obrigatório." });
+    }
+
     try {
-        await model.deleteDisciplina(id);
-        res.json({ message: "Disciplina excluída!" });
+        await model.deletarDisciplina(id);
+        res.status(200).json({ message: "Disciplina excluída com sucesso!" });
     } catch (error) {
+        console.error("Erro ao excluir disciplina:", error);
         res.status(500).json({ error: "Erro ao excluir disciplina." });
     }
 };
 
+// Adicionado controller para consultar a disciplina por id do curso
+const consultarDisciplinasPorCursoId = async (req, res) => {
+    const { curso_id } = req.params;
+
+    if (!curso_id) {
+        return res.status(400).json({ error: 'ID do curso é obrigatório.' });
+    }
+
+    try {
+        const disciplinas = await disciplinaModel.consultarDisciplinasPorCursoId(curso_id);
+
+        if (disciplinas.length === 0) {
+            return res.status(404).json({ error: 'Nenhuma disciplina encontrada para este curso.' });
+        }
+
+        res.status(200).json({ data: disciplinas });
+    } catch (error) {
+        console.error('Erro ao consultar disciplinas:', error);
+        res.status(500).json({ error: 'Erro interno ao consultar disciplinas.' });
+    }
+};
+
 module.exports = {
-    getDisciplinas,
-    createDisciplinas,
-    updateDisciplinas,
-    deleteDisciplina
+    consultarDisciplina,
+    novaDisciplina,
+    atualizarDisciplina,
+    deletarDisciplina,
+    consultarDisciplinasPorCursoId
 };

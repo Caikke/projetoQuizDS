@@ -57,6 +57,26 @@ const cursoController = {
             console.error('Erro ao consultar cursos:', error);
             res.status(500).json({ error: 'Erro interno ao consultar cursos.' });
         }
+    },
+//Adicionado controller para consultar o curso por nome
+    consultarCursoPorNome: async (req, res) => {
+        const {nome} = req.params;
+
+        if (!nome){
+            return res.status(400).json({ error: "Nome é obrigatório."});
+        }
+        
+        try {
+            const curso = await curso.Model.consultarCursoPorNome(nome);
+
+            if (curso.length === 0) {
+                return res.status(404).json({ error: 'Curso não encontrado'});
+            }
+            res.status(200).json({ data: curso[0]});
+        } catch (error) {
+            console.error('Erro ao consultar curso por nome:', error);
+            res.status(500).json({ error: 'Erro interno ao consultar curso.'})
+        }
     }
 };
 
