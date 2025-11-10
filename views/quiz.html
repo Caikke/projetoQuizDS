@@ -49,14 +49,12 @@
   </div>
 
   <script>
-    // Dados do quiz
     let questoes = [];
     let questaoAtual = 0;
     let respostas = [];
     let pontuacao = 0;
     let disciplinaId = null;
 
-    // Nomes das disciplinas (baseado no database.sql)
     const disciplinas = {
       1: 'Programação de Algoritmos',
       2: 'Banco de Dados',
@@ -74,13 +72,11 @@
       14: 'Operação de Software Aplicativo'
     };
 
-    // Capturar ID da disciplina da URL
     function obterDisciplinaDaURL() {
       const params = new URLSearchParams(window.location.search);
       return params.get('disciplina');
     }
 
-    // Carregar questões (simulado - você precisará criar endpoint no backend)
     async function carregarQuestoes() {
       disciplinaId = obterDisciplinaDaURL();
       
@@ -89,14 +85,9 @@
         return;
       }
 
-      // Atualizar nome da disciplina
       document.getElementById('disciplinaNome').textContent = disciplinas[disciplinaId] || 'Disciplina';
 
       try {
-        // AQUI VOCÊ VAI FAZER A CHAMADA PARA SEU BACKEND
-        // Exemplo: const response = await fetch(`/api/questoes/disciplina/${disciplinaId}`);
-        
-        // Por enquanto, questões de exemplo (REMOVA ISSO quando tiver o backend pronto)
         questoes = gerarQuestoesExemplo(disciplinaId);
         
         if (questoes.length === 0) {
@@ -110,7 +101,6 @@
       }
     }
 
-    // FUNÇÃO TEMPORÁRIA - Gerar questões de exemplo
     function gerarQuestoesExemplo(discId) {
       const exemplos = [
         {
@@ -216,25 +206,20 @@
         container.appendChild(questaoDiv);
       });
 
-      atualizarProgresso();
       atualizarBotaoProximo();
     }
 
     function selecionarAlternativa(questaoIndex, alternativaId) {
-      // Remover seleção anterior
       const alternativasDiv = document.getElementById(`alternativas-${questaoIndex}`);
       alternativasDiv.querySelectorAll('.alternativa').forEach(alt => {
         alt.classList.remove('selecionada');
       });
 
-      // Marcar nova seleção
       const alternativaClicada = alternativasDiv.querySelector(`#alt-${alternativaId}`).closest('.alternativa');
       alternativaClicada.classList.add('selecionada');
       
-      // Marcar o radio
       document.getElementById(`alt-${alternativaId}`).checked = true;
 
-      // Salvar resposta
       respostas[questaoIndex] = alternativaId;
       
       atualizarBotaoProximo();
@@ -260,13 +245,7 @@
       }
     }
 
-    function atualizarProgresso() {
-      const progresso = ((questaoAtual + 1) / questoes.length) * 100;
-      document.getElementById('progressoBarra').style.width = progresso + '%';
-    }
-
     function finalizarQuiz() {
-      // Calcular pontuação
       pontuacao = 0;
       questoes.forEach((questao, index) => {
         const respostaSelecionada = respostas[index];
@@ -277,7 +256,6 @@
         }
       });
 
-      // Mostrar resultado
       document.getElementById('quizContent').style.display = 'none';
       document.getElementById('resultadoContainer').classList.add('ativo');
       
@@ -313,7 +291,6 @@
       window.location.href = 'disciplinaEcurso.html';
     }
 
-    // Iniciar quando a página carregar
     window.addEventListener('DOMContentLoaded', carregarQuestoes);
   </script>
 </body>
