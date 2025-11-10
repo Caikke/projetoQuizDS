@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require("express")
 const router = express.Router()
 const usuarioController = require("../controllers/usuarioController")
@@ -16,8 +17,8 @@ router.post("/api/login", async (req, res) =>  {
 
     if(email === usuario[0].email && isMatch ){
         const token = jwt.sign({userId: usuario[0].idUsuario},
-            "segredo",
-            {expiresIn:150}
+            process.env.SECRET,
+            {expiresIn:300}
         )
 
         res.status(200).json({token: token})
