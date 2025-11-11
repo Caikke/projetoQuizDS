@@ -2,38 +2,50 @@ const connection = require("../config/db")
 
 
 const usuarioModel = {
-//função regististrar usuario
- registarUsuario: async (usuario) => {
-    return (await connection).execute(
-            "INSERT INTO usuario (login, email, senha) VALUES (?, ?, ?)",
+    //função regististrar usuario
+    registarUsuario: async (usuario) => {
+        return await (await connection).execute(
+            "CALL InsertUsuario(?, ?, ?)",
             [usuario.login, usuario.email, usuario.senha]
         );
 
-},
-        //função para login
-  login: async (email, senha) => {
-    const usuario = usuario.find(u => u.email === email && u.senha === senha);
-    const verificarSenha = senha.find(u=>u.senha === senha);
-    if(!verificarSenha){
-        console.log("As senhas nao combinam");
-        return null;
-    } 
-    if(!usuario){
-        console.log("E-mail ou senha incorretos!");
-        return null;
-    }
-    console.log(`Bem vindo(a), ${usuario.nome}!`);
-    return usuario;
- },
+    },
 
- adicionarPontos: async (usuario, pontos) =>{
-    usario.pontuacao += pontos;
-    console.log(`pontuação atual ${usuario.pontos}`);
-},
+    //função para login usando procedures
+    login: async (email, senha) => {
+        const conn = await connection;
+        const [result] = await conn.execute("CALL Verificar_Se_Email_e_Senha_Batem(?, ?)", [email, senha]);
 
-pegarUsuarioPeloEmail: async (email) => {
-        return (await connection).execute("SELECT * FROM usuario WHERE email = ?", [email]);
+        const usuario = result?.[0]?.[0];
+        return usuario || null;
+    },
+
+    //Função adicionar pontos usando a procedure do banco
+    adicionarPontos: async (usuarioId) => {
+        await (await connection).execute(
+            "CALL AtualizarPontuacaoUsuario(?)",
+            [usuarioId]
+        );
+        console.log(`Pontuação atual: ${usuarioId}`);
+    },
+
+    // procedure verifica se o email existe
+    verificarEmailExistente: async (email) => {
+        const [rows] = await (await connection).execute(
+            "CALL Verificar_Email_Existente(?)",
+            [email]
+        );
+        return rows[0][0]?.existe > 0;
+    },
+
+    pegarUsuarioPeloEmail: async (email) => {
+        const conn = await connection;
+        const [result] = await conn.execute("CALL BuscarUsuarioPorEmail(?)", [email]);
+
+        const usuario = result?.[0]?.[0];
+        return usuario || null;
     }
+
 
 }
 

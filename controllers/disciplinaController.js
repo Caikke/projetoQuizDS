@@ -45,7 +45,7 @@ const disciplinaController = {
         }
     },
 
-    // Adicionado controller para consultar a disciplina por id do curso
+    //Consulta a disciplina pelo id do curso
     consultarDisciplinasPorCursoId: async (req, res) => {
         const { id } = req.params;
 
@@ -54,18 +54,20 @@ const disciplinaController = {
         }
 
         try {
-            const [disciplina] = await model.consultarDisciplinaPorIDCurso(id);
+            const disciplinas = await model.consultarTodasDisciplinas();
+            const filtradas = disciplinas.filter(d => d.curso_id == id);
 
-            if (disciplina.length === 0) {
+            if (filtradas.length === 0) {
                 return res.status(404).json({ error: 'Nenhuma disciplina encontrada para este curso.' });
             }
 
-            res.status(200).json(disciplina);
+            res.status(200).json(filtradas);
         } catch (error) {
             console.error('Erro ao consultar disciplinas:', error);
             res.status(500).json({ error: 'Erro interno ao consultar disciplinas.' });
         }
     }
+
 };
 
 module.exports = disciplinaController;

@@ -30,22 +30,11 @@ const cursoModel = {
     },
 
     consultarTodosRegistros: async () => {
-        try {
-            const sql = "select * from curso";
-
-            return (await db).execute(sql);
-
-        } catch (error) {
-            Console.error('Erro ao buscar cursos: ', error);
-            return error;
-        }
-    },
-
-    consultarCursoPorNome: async (id) => {
-        const sql = 'SELECT * FROM curso WHERE nome = ?';
-        const res = (await db).execute(sql, [nome]);
-        return res;
+        const conn = await db;
+        const [rows] = await conn.execute("CALL SelectCurso()");
+        return rows[0];
     }
+
 
 };
 
