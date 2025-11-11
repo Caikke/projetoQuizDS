@@ -23,12 +23,13 @@ const disciplinaModel = {
     deletarDisciplina: async (id) => {
         return (await connection).execute("CALL DeleteDisciplina(?)", [id]);
     },
-
-    consultarDisciplinaPorIDCurso: async (id) => {
-        const sql = 'SELECT * FROM disciplina WHERE curso_id = ?';
-        const res = (await connection).execute(sql, [id]);
-        return res;
+    
+    consultarTodasDisciplinas: async () => {
+        const conn = await connection;
+        const [rows] = await conn.execute("CALL SelectDisciplina()");
+        return rows[0];
     }
+
 };
 
 module.exports = disciplinaModel;
