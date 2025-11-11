@@ -51,8 +51,8 @@ const cursoController = {
 
     consultaRegistro: async (req, res) => {
         try {
-            const cursos = await cursoModel.consultarTodosRegistros();
-            res.status(200).json({ message: 'Cursos encontrados com sucesso!', data: cursos });
+            const [result] = await cursoModel.consultarTodosRegistros();
+            res.status(200).json(result);
         } catch (error) {
             console.error('Erro ao consultar cursos:', error);
             res.status(500).json({ error: 'Erro interno ao consultar cursos.' });

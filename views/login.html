@@ -74,13 +74,16 @@
     .then((response) => {
       if(response.status === 200){
         alert("Logado com sucesso")
-         window.location.href = "disciplinaEcurso.html";
+        location.href = "/disciplinaEcurso"
       }else{
         alert("email ou senha invalidos")
       }
       return response.json()
     })
-    .then((res) => console.log(res))
+    .then((res) => {
+      localStorage.clear
+      localStorage.setItem("token", res.token)
+    })
     .catch((err) => alert("falha no login", err))
 
     e.target.reset()

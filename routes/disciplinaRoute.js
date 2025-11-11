@@ -1,16 +1,12 @@
 const express = require("express");
 const router = express.Router();
-const {
-    consultarDisciplina,
-    novaDisciplina,
-    atualizarDisciplina,
-    deletarDisciplina,
-    consultarDisciplinaPorIDCurso
-} = require("../controllers/disciplinaController");
+const disciplinaController = require("../controllers/disciplinaController");
+const verifyJwt = require("../config/middleware/verifyToken")
 
-router.get('/disciplina', consultarDisciplina);           // Listar todas
-router.post('/disciplina', novaDisciplina);               // Criar nova
-router.put('/disciplina/:id', atualizarDisciplina);       // Atualizar existente
-router.delete('/disciplina/:id', deletarDisciplina);      // Excluir por ID
-router.get('/disciplina/curso/:curso_id', consultarDisciplinaPorIDCurso); // adicionado rota para consultar disciplina por curso
+router.get('/api/disciplina', disciplinaController.getDisciplinas);           // Listar todas
+router.post('/api/disciplina', disciplinaController.createDisciplinas);               // Criar nova
+router.put('/api/disciplina/:id', disciplinaController.updateDisciplinas);       // Atualizar existente
+router.delete('/api/disciplina/:id', disciplinaController.deleteDisciplina);      // Excluir por ID
+router.get("/api/disciplina/:id", verifyJwt, disciplinaController.consultarDisciplinasPorCursoId) // adicionado rota para consultar disciplina por curso
+
 module.exports = router;
