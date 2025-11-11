@@ -2,7 +2,7 @@ const {
     insertQuestoes,
     updateQuestoes,
     deleteQuestoes
-} = require('../models/questaoModel');
+} = require('../models/questoesModel')
 
 const novaQuestao = async (req, res) => {
     try {
