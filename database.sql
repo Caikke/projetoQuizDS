@@ -415,24 +415,30 @@ DELIMITER ;
 ####### COMPARANDO LOGIN E VERIFICANDO EXISTENCIA ############
 
 DELIMITER //
-CREATE PROCEDURE Verificar_Se_Login_Existe_e_Senha_Bate(IN xLogin VARCHAR(100), IN xSenha VARCHAR(64))
-
+CREATE PROCEDURE Verificar_Se_Email_e_Senha_Batem(IN xEmail VARCHAR(100), IN xSenha VARCHAR(64))
 BEGIN
-SELECT * FROM Usuario
-WHERE login = xLogin AND senha = SHA2(xSenha, 256);
+    SELECT * FROM usuario
+    WHERE email = xEmail AND senha = SHA2(xSenha, 256);
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE Verificar_Email_Existente(IN xEmail VARCHAR(100))
+BEGIN
+    SELECT COUNT(*) AS existe
+    FROM usuario
+    WHERE email = xEmail;
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE BuscarUsuarioPorEmail(IN xEmail VARCHAR(100))
+BEGIN
+    SELECT * FROM usuario WHERE email = xEmail;
 END //
 DELIMITER ;
 
 
-DELIMITER //
-CREATE PROCEDURE Verificar_Login_Existente(IN xLogin VARCHAR(100))
-BEGIN
-SELECT COUNT(*) AS existe
-FROM Usuario
-WHERE login = xLogin;
-END // 
-
-DELIMITER ;
 
 
 ################ ATUALIZAR PONTUAÇÃO DO USUÁRIO ##########################################
