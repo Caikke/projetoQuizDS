@@ -13,13 +13,8 @@
     <input type="checkbox" id="mostrarDisciplinas" hidden>
 
     <!-- TELA DE CURSOS  -->
-    <div class="tela cursos">
+    <div class="tela cursos" id="tela-curso">
       <h1>Escolha seu Curso</h1>
-
-      <label for="mostrarDisciplinas" class="curso-card">
-        <h2>Desenvolvimento de Sistemas</h2>
-        <p>Aprenda programação de forma divertida! </p>
-      </label>
     </div>
 
     <!-- TELA DE DISCIPLINAS -->
@@ -45,5 +40,59 @@
       </div>
     </div>
   </div>
+  <script>
+    const telaCurso = document.querySelector("#tela-curso")
+    const disciplinasLista = document.querySelector("#disciplinas-lista")
+
+    fetch("/api/curso", {
+      method: "GET",
+      headers: {
+        "content-Type": "application/json",
+        "bearer": localStorage.getItem("token")
+      }
+    })
+      .then((response) => {
+        if (response.status === 200) {
+          return response.json()
+        } else {
+          location.href = "/"
+        }
+      })
+      .then((result) => {
+        result.forEach(res => {
+          telaCurso.innerHTML += `
+        <label onclick="mostarDisciplina(${res.id})" for="mostrarDisciplinas" class="curso-card">
+        <h2>${res.nome}</h2>
+        </label>
+        `
+        });
+      })
+      .catch((err) => (console.error(err)))
+
+    const mostarDisciplina = (id) => {
+
+      fetch("/api/disciplina/" + id, {
+        method: "GET",
+        headers: {
+          "content-Type": "application/json",
+          "bearer": localStorage.getItem("token")
+        }
+      })
+        .then((response) => {
+          if (response.status === 200) {
+            return response.json()
+          }
+        })
+        .then((result) => {
+          result.forEach(res => {
+            disciplinasLista.innerHTML += `
+            <div class="disciplina"><h3>${res.nome}</h3><a href="quiz.html">Jogar Quiz</a></div>
+            `
+          })
+        })
+        .catch((err) => (console.error(err)))
+    }
+
+  </script>
 </body>
 </html>
