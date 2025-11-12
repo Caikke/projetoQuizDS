@@ -1,50 +1,70 @@
-const usuarioModel = require("../models/usuarioModel")
-const bcrypt = require("bcrypt")
+const usuarioModel = require("../models/usuarioModel");
 
 const usuarioController = {
+  
+  registrar: async (req, res) => {
+    try {
+      const { login, email, senha } = req.body;
 
-    registrar: async(req, res) => {
-        try{
+      const emailExiste = await usuarioModel.verificarEmailExistente(email);
+      if (emailExiste) {
+        return res.status(409).json({ mensagem: "E-mail já cadastrado!" });
+      }
 
-            const senha = req.body.senha
+      const usuario = { login, email, senha }; // senha em texto puro
+      const [result] = await usuarioModel.registarUsuario(usuario);
 
-            const senhaHash = await bcrypt.hash(senha, 10)
+      res.status(201).json({ insertId: result.insertId });
+    } catch (err) {
+      console.error("Erro ao registrar:", err);
+      res.status(400).json({ mensagem: "Usuário não registrado." });
+    }
+  },
 
-            const usuario = {
-                login: req.body.login,
-                email: req.body.email,
-                senha: senhaHash
-            }
-
-            const [result] = await usuarioModel.registarUsuario(usuario)
-
-            res.status(201).json({insertId: result.insertId})
-
-        }catch(err){
-            res.status(400).json({message:"erro"})
-            console.log("erro", err)
-        }
-    },
 
   login: async (req, res) => {
-        const { email, senha } = req.body;
-        const usuario = loginUsuario(email, senha);
-        if (!usuario) {
-            return res.status(401).json({ mensagem: "E-mail ou senha incorretos!" });
-        }
-        res.json({ mensagem: `Bem-vindo(a), ${usuario.login}!`, usuario });
-    },
+    try {
+      const { email, senha } = req.body;
 
-  pontuar: async (res, req) => {
-        const { email, pontos } = req.body;
-        const usuario = adicionarPontos(email, pontos);
+      const usuario = await usuarioModel.login(email, senha);
+      if (!usuario) {
+        return res.status(401).json({ mensagem: "E-mail ou senha incorretos!" });
+      }
 
-        if (!usuario) {
-            return res.status(404).json({ mensagem: "Usuário não encontrado!" });
-        }
-        res.json({ mensagem: "Pontuação atualizada", usuario });
+      res.json({ mensagem: `Bem-vindo(a), ${usuario.login}!`, usuario });
+    } catch (err) {
+      console.error("Erro no login:", err);
+      res.status(500).json({ mensagem: "Erro interno no login" });
     }
+  },
 
-}
+  pontuar: async (req, res) => {
+    try {
+      const { usuarioId } = req.body;
+      await usuarioModel.adicionarPontos(usuarioId);
+      res.json({ mensagem: "Pontuação atualizada!" });
+    } catch (err) {
+      console.error("Erro ao atualizar pontuação:", err);
+      res.status(500).json({ mensagem: "Erro ao atualizar pontuação" });
+    }
+  },
 
-module.exports = usuarioController
+
+  buscarPorEmail: async (req, res) => {
+    try {
+      const { email } = req.params;
+      const usuario = await usuarioModel.pegarUsuarioPeloEmail(email);
+
+      if (!usuario) {
+        return res.status(404).json({ mensagem: "Usuário não encontrado!" });
+      }
+
+      res.json(usuario);
+    } catch (err) {
+      console.error("Erro ao buscar usuário:", err);
+      res.status(500).json({ mensagem: "Erro ao buscar usuário" });
+    }
+  }
+};
+
+module.exports = usuarioController;

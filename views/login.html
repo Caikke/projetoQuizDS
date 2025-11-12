@@ -39,7 +39,7 @@
 
 
         <!-- CASO ELE NÃO TENHA UMA CONTA, QUANDO CLICAR VAI PARA A TELA DE CADFASTRO -->
-        <p class="signup">Ou <a href="/cadastro">inscrever-se</a></p>
+        <p class="signup">Ou <a href="cadastro.html">inscrever-se</a></p>
       </form>
     </div>
 
@@ -74,13 +74,16 @@
     .then((response) => {
       if(response.status === 200){
         alert("Logado com sucesso")
-         window.location.href = "disciplinaEcurso.html";
+        location.href = "/disciplinaEcurso"
       }else{
         alert("email ou senha invalidos")
       }
       return response.json()
     })
-    .then((res) => console.log(res))
+    .then((res) => {
+      localStorage.clear
+      localStorage.setItem("token", res.token)
+    })
     .catch((err) => alert("falha no login", err))
 
     e.target.reset()

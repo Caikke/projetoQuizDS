@@ -11,7 +11,6 @@ CREATE TABLE usuario (
     pontuacao INT DEFAULT 0
 );
 
-select * from usuario;
 ########TABELA CURSO###########
 
 CREATE TABLE curso (
@@ -102,20 +101,22 @@ INSERT INTO curso (nome, sigla)
 VALUES ('Desenvolvimento de Sistemas', 'DS');
 
 INSERT INTO disciplina (nome, curso_id, sigla) VALUES
-('Análise e Projeto de Sistemas', 1, 'APS'),
+('Programação de algoritmos', 1, 'PA'),
 ('Banco de Dados', 1, 'BD'),
 ('Desenvolvimento de Sistemas', 1, 'DS'),
 ('Programação de Aplicativos Mobile', 1, 'PAM'),
-('Programação Web', 1, 'PW'),
-('Operação de Software Aplicativo', 1, 'OSA'),
-('Programação de algoritmos', 1, 'PA'),
+('Análise e Projeto de Sistemas', 1, 'APS'),
 ('Sistemas Embarcados', 1, 'SE'),
 ('Segurança de Sistemas de Informação', 1, 'SSI'),
 ('Internet e Protocolos', 1, 'IP'),
-('Linguagem, Trabalho e Tecnologia', 1, 'LTT'),
 ('Inglês Instrumental', 1, 'II'),
 ('Design Digital', 1, 'DD'),
-('Ética e Cidadania Organizacional', 1, 'ECO');
+('Ética e Cidadania Organizacional', 1, 'ECO'),
+('Linguagem, Trabalho e Tecnologia', 1, 'LTT'),
+('Programação Web', 1, 'PW'),
+('Operação de Software Aplicativo', 1, 'OSA');
+
+
 
 ###############ÍNDICES############################
 CREATE INDEX idx_usuario_login ON usuario(login);
@@ -368,6 +369,25 @@ BEGIN
     LIMIT 5;
 END //
 
+##### Puxa as 5 questões que foi gerador aleatoriamente de uma vez #####
+CREATE PROCEDURE SelecionarQuestoesQuiz(IN xQuizId INT)
+BEGIN
+    SELECT 
+        q1.id AS Questao01_Id, q1.enunciado AS Questao01_Enunciado, q1.pontuacao AS Questao01_Pontuacao,
+        q2.id AS Questao02_Id, q2.enunciado AS Questao02_Enunciado, q2.pontuacao AS Questao02_Pontuacao,
+        q3.id AS Questao03_Id, q3.enunciado AS Questao03_Enunciado, q3.pontuacao AS Questao03_Pontuacao,
+        q4.id AS Questao04_Id, q4.enunciado AS Questao04_Enunciado, q4.pontuacao AS Questao04_Pontuacao,
+        q5.id AS Questao05_Id, q5.enunciado AS Questao05_Enunciado, q5.pontuacao AS Questao05_Pontuacao
+    FROM quiz qu
+    LEFT JOIN questao q1 ON qu.idQuestao01 = q1.id
+    LEFT JOIN questao q2 ON qu.idQuestao02 = q2.id
+    LEFT JOIN questao q3 ON qu.idQuestao03 = q3.id
+    LEFT JOIN questao q4 ON qu.idQuestao04 = q4.id
+    LEFT JOIN questao q5 ON qu.idQuestao05 = q5.id
+    WHERE qu.id = xQuizId;
+END //
+DELIMITER ;
+
 
 ##########Ranking de usuários insignia###############
 
@@ -395,43 +415,29 @@ DELIMITER ;
 ####### COMPARANDO LOGIN E VERIFICANDO EXISTENCIA ############
 
 DELIMITER //
-CREATE PROCEDURE Verificar_Se_Login_Existe_e_Senha_Bate(IN xLogin VARCHAR(100), IN xSenha VARCHAR(64))
-
+CREATE PROCEDURE Verificar_Se_Email_e_Senha_Batem(IN xEmail VARCHAR(100), IN xSenha VARCHAR(64))
 BEGIN
-SELECT * FROM Usuario
-WHERE login = xLogin AND senha = SHA2(xSenha, 256);
+    SELECT * FROM usuario
+    WHERE email = xEmail AND senha = SHA2(xSenha, 256);
 END //
 DELIMITER ;
 
-
 DELIMITER //
-CREATE PROCEDURE Verificar_Login_Existente(IN xLogin VARCHAR(100))
+CREATE PROCEDURE Verificar_Email_Existente(IN xEmail VARCHAR(100))
 BEGIN
-SELECT COUNT(*) AS existe
-FROM Usuario
-WHERE login = xLogin;
-END // 
-
-DELIMITER ;
-
-DELIMITER //
-CREATE PROCEDURE SelecionarQuestoesQuiz(IN xQuizId INT)
-BEGIN
-    SELECT 
-        q1.id AS Questao01_Id, q1.enunciado AS Questao01_Enunciado, q1.pontuacao AS Questao01_Pontuacao,
-        q2.id AS Questao02_Id, q2.enunciado AS Questao02_Enunciado, q2.pontuacao AS Questao02_Pontuacao,
-        q3.id AS Questao03_Id, q3.enunciado AS Questao03_Enunciado, q3.pontuacao AS Questao03_Pontuacao,
-        q4.id AS Questao04_Id, q4.enunciado AS Questao04_Enunciado, q4.pontuacao AS Questao04_Pontuacao,
-        q5.id AS Questao05_Id, q5.enunciado AS Questao05_Enunciado, q5.pontuacao AS Questao05_Pontuacao
-    FROM quiz qu
-    LEFT JOIN questao q1 ON qu.idQuestao01 = q1.id
-    LEFT JOIN questao q2 ON qu.idQuestao02 = q2.id
-    LEFT JOIN questao q3 ON qu.idQuestao03 = q3.id
-    LEFT JOIN questao q4 ON qu.idQuestao04 = q4.id
-    LEFT JOIN questao q5 ON qu.idQuestao05 = q5.id
-    WHERE qu.id = xQuizId;
+    SELECT COUNT(*) AS existe
+    FROM usuario
+    WHERE email = xEmail;
 END //
 DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE BuscarUsuarioPorEmail(IN xEmail VARCHAR(100))
+BEGIN
+    SELECT * FROM usuario WHERE email = xEmail;
+END //
+DELIMITER ;
+
 
 
 
@@ -468,3 +474,33 @@ BEGIN
     CALL AtualizarPontuacaoUsuario(OLD.usuario_id);
 END //
 DELIMITER ;
+
+
+
+DELIMITER //
+
+##### Alternativa #####
+
+CREATE PROCEDURE GetQuestoesEAlternativasPorDisciplina(
+    IN idDisciplina INT
+)
+BEGIN
+    SELECT 
+        q.id AS id_questao,
+        q.enunciado AS enunciado_questao,
+        q.pontuacao,
+        a.id AS id_alternativa,
+        a.enunciado AS enunciado_alternativa,
+        a.correta
+    FROM (
+        SELECT * FROM questao 
+        WHERE disciplina_id = idDisciplina 
+        ORDER BY RAND() 
+        LIMIT 5
+    ) AS q
+    JOIN alternativa a ON a.questao_id = q.id
+    ORDER BY q.id, a.id;
+END //
+
+DELIMITER ;
+

@@ -1,17 +1,12 @@
 const express = require('express')
 const router = express.Router()
-const {
-    novoRegistro,
-    edicaoRegistro,
-    excluirRegistro,
-    consultaRegistro,
-    consultarCursoPorNome
-} = require("../controllers/cursoController")
+const cursoController = require("../controllers/cursoController")
+const verifyJwt = require("../config/middleware/verifyToken")
 
-router.post("/curso", novoRegistro)
-router.put("/curso/:id", edicaoRegistro)
-router.delete("/curso/:id", excluirRegistro)
-router.get("/curso", consultaRegistro)
-router.get('/curso/nome/:nome',consultarCursoPorNome) //Adicionado rota para consultar curso por nome
+router.post("/api/curso", cursoController.novoRegistro)
+router.put("/api/curso/:id", cursoController.edicaoRegistro)
+router.delete("/api/curso/:id", cursoController.excluirRegistro)
+router.get('/api/curso/nome/:nome', verifyJwt,cursoController.consultarRegistrosPorNome)
+router.get("/api/curso", verifyJwt, cursoController.consultaRegistro)
 
 module.exports = router

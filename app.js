@@ -5,6 +5,9 @@ const app = express()
 const PORT = 3000
 
 const usuarioRoute = require("./routes/usuarioRoute")
+const cursoRoute = require("./routes/cursoRoute")
+const disciplinaRoute = require("./routes/disciplinaRoute")
+const questaoRoute = require("./routes/questaoRoute")
 
 // AQUI PARA VOCÊ CONECTAR A PASTA VIEWS E INDEX-------------
 // Permite acessar arquivos estáticos da pasta views (ex: CSS, JS)
@@ -13,6 +16,10 @@ app.use(express.static(path.join(__dirname, 'views')));
 app.use(express.json())
 
 app.use(usuarioRoute)
+app.use(cursoRoute)
+app.use(disciplinaRoute)
+app.use(questaoRoute)
+
 
 // Rotas para cada página
 app.get('/', (req, res) => {
@@ -29,6 +36,10 @@ app.get('/redefinir-senha', (req, res) => {
 });
 app.get('/sobre', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'sobre.html'));
+});
+
+app.get('/disciplinaEcurso', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'disciplinaEcurso.html'));
 });
 
 app.listen(PORT, () => {

@@ -1,32 +1,45 @@
-const express = require("express")
-const router = express.Router()
-const usuarioController = require("../controllers/usuarioController")
-const usuarioModel = require("../models/usuarioModel")
-const bcrypt = require("bcrypt")
-const jwt = require("jsonwebtoken")
-
-router.post("/api/cadastrar", usuarioController.registrar)
-
-router.post("/api/login", async (req, res) =>  {
-    const {email, senha} = req.body
-    const [usuario] = await usuarioModel.pegarUsuarioPeloEmail(email)
-
-    const isMatch = await bcrypt.compare(senha, usuario[0].senha)
+require("dotenv").config();
+const express = require("express");
+const router = express.Router();
+const usuarioController = require("../controllers/usuarioController");
+const usuarioModel = require("../models/usuarioModel");
+const jwt = require("jsonwebtoken");
 
 
-    if(email === usuario[0].email && isMatch ){
-        const token = jwt.sign({userId: usuario[0].idUsuario},
-            "segredo",
-            {expiresIn:150}
-        )
+router.post("/api/cadastrar", usuarioController.registrar);
 
-        res.status(200).json({token: token})
-    }else{
-        res.status(400).json({message:"erro"})
+
+router.post("/api/login", async (req, res) => {
+  try {
+    const { email, senha } = req.body;
+
+
+    const usuario = await usuarioModel.login(email, senha);
+    if (!usuario) {
+      return res.status(401).json({ message: "E-mail ou senha incorretos!" });
     }
 
-})
+
+    const token = jwt.sign(
+      { userId: usuario.id },
+      process.env.SECRET,
+      { expiresIn: 300 } 
+    );
+
+    res.status(200).json({
+      message: `Bem-vindo(a), ${usuario.login}!`,
+      token,
+      usuario
+    });
+  } catch (err) {
+    console.error("Erro no login:", err);
+    res.status(500).json({ message: "Erro interno no login" });
+  }
+});
+
 
 router.post("/pontuar", usuarioController.pontuar);
 
-module.exports = router
+router.get("/usuario/:email", usuarioController.buscarPorEmail);
+
+module.exports = router;

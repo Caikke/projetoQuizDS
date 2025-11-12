@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz Educacional</title>
+  <link href="https://fonts.googleapis.com/css2?family=Momo+Trust+Display&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/quiz.css">
+</head>
+<body>
+  <header class="navbar">
+    <div class="logo-container">
+      <div class="logo">Quiz Interativo</div>
+    </div>
+    <nav>
+      <a href="index.html" class="linkT">Início</a>
+      <a href="disciplinaEcurso.html" class="linkT">Disciplinas</a>
+    </nav>
+  </header>
+
+  <div class="quiz-container">
+    <div class="quiz-header">
+      <h1>Quiz de Desenvolvimento de Sistemas</h1>
+      <div class="disciplina-nome" id="disciplinaNome">Carregando...</div>
+    </div>
+
+    <div id="loadingContainer" class="loading">
+      Carregando questões...
+    </div>
+
+    <div id="quizContent" style="display: none;">
+      <div id="questoesContainer"></div>
+
+      <div class="botoes-container">
+        <button class="btn btn-proximo" id="btnProximo" onclick="proximaQuestao()" disabled>
+          Próxima
+        </button>
+      </div>
+    </div>
+
+    <div id="resultadoContainer" class="resultado-container">
+      <h2>Quiz Finalizado! 🎉</h2>
+      <div class="pontuacao-final" id="pontuacaoFinal">0/0</div>
+      <div class="mensagem-resultado" id="mensagemResultado"></div>
+      <button class="btn btn-reiniciar" onclick="reiniciarQuiz()">Tentar Novamente</button>
+      <button class="btn btn-reiniciar" onclick="voltarDisciplinas()">Escolher Outra Disciplina</button>
+    </div>
+  </div>
+
+  <script>
+    let questoes = [];
+    let questaoAtual = 0;
+    let respostas = [];
+    let pontuacao = 0;
+    let disciplinaId = null;
+
+    const disciplinas = {
+      1: 'Programação de Algoritmos',
+      2: 'Banco de Dados',
+      3: 'Desenvolvimento de Sistemas',
+      4: 'Programação de Aplicativos Mobile',
+      5: 'Análise e Projeto de Sistemas',
+      6: 'Sistemas Embarcados',
+      7: 'Segurança de Sistemas de Informação',
+      8: 'Internet e Protocolos',
+      9: 'Inglês Instrumental',
+      10: 'Design Digital',
+      11: 'Ética e Cidadania Organizacional',
+      12: 'Linguagem, Trabalho e Tecnologia',
+      13: 'Programação Web',
+      14: 'Operação de Software Aplicativo'
+    };
+
+    function obterDisciplinaDaURL() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('disciplina');
+    }
+
+    async function carregarQuestoes() {
+      disciplinaId = obterDisciplinaDaURL();
+      
+      if (!disciplinaId) {
+        mostrarErro('Disciplina não selecionada. Por favor, selecione uma disciplina.');
+        return;
+      }
+
+      document.getElementById('disciplinaNome').textContent = disciplinas[disciplinaId] || 'Disciplina';
+
+      try {
+        questoes = gerarQuestoesExemplo(disciplinaId);
+        
+        if (questoes.length === 0) {
+          mostrarErro('Nenhuma questão encontrada para esta disciplina.');
+          return;
+        }
+
+        iniciarQuiz();
+      } catch (error) {
+        mostrarErro('Erro ao carregar questões: ' + error.message);
+      }
+    }
+
+    function gerarQuestoesExemplo(discId) {
+      const exemplos = [
+        {
+          id: 1,
+          enunciado: `Questão exemplo de ${disciplinas[discId]}. Qual é a resposta correta?`,
+          pontuacao: 20,
+          alternativas: [
+            { id: 1, enunciado: 'Alternativa A', correta: 1 },
+            { id: 2, enunciado: 'Alternativa B', correta: 0 },
+            { id: 3, enunciado: 'Alternativa C', correta: 0 },
+            { id: 4, enunciado: 'Alternativa D', correta: 0 }
+          ]
+        },
+        {
+          id: 2,
+          enunciado: 'Segunda questão de exemplo. Escolha a opção correta:',
+          pontuacao: 20,
+          alternativas: [
+            { id: 5, enunciado: 'Opção 1', correta: 0 },
+            { id: 6, enunciado: 'Opção 2', correta: 1 },
+            { id: 7, enunciado: 'Opção 3', correta: 0 },
+            { id: 8, enunciado: 'Opção 4', correta: 0 }
+          ]
+        },
+        {
+          id: 3,
+          enunciado: 'Terceira questão. Marque a alternativa verdadeira:',
+          pontuacao: 20,
+          alternativas: [
+            { id: 9, enunciado: 'Verdadeiro A', correta: 0 },
+            { id: 10, enunciado: 'Verdadeiro B', correta: 0 },
+            { id: 11, enunciado: 'Verdadeiro C', correta: 1 },
+            { id: 12, enunciado: 'Verdadeiro D', correta: 0 }
+          ]
+        },
+        {
+          id: 4,
+          enunciado: 'Quarta questão do quiz. Qual alternativa está correta?',
+          pontuacao: 20,
+          alternativas: [
+            { id: 13, enunciado: 'Alternativa I', correta: 0 },
+            { id: 14, enunciado: 'Alternativa II', correta: 0 },
+            { id: 15, enunciado: 'Alternativa III', correta: 0 },
+            { id: 16, enunciado: 'Alternativa IV', correta: 1 }
+          ]
+        },
+        {
+          id: 5,
+          enunciado: 'Última questão! Escolha a resposta certa:',
+          pontuacao: 20,
+          alternativas: [
+            { id: 17, enunciado: 'Resposta X', correta: 0 },
+            { id: 18, enunciado: 'Resposta Y', correta: 1 },
+            { id: 19, enunciado: 'Resposta Z', correta: 0 },
+            { id: 20, enunciado: 'Resposta W', correta: 0 }
+          ]
+        }
+      ];
+      return exemplos;
+    }
+
+    function mostrarErro(mensagem) {
+      document.getElementById('loadingContainer').style.display = 'none';
+      document.getElementById('erroContainer').textContent = mensagem;
+      document.getElementById('erroContainer').style.display = 'block';
+    }
+
+    function iniciarQuiz() {
+      document.getElementById('loadingContainer').style.display = 'none';
+      document.getElementById('quizContent').style.display = 'block';
+      respostas = new Array(questoes.length).fill(null);
+      exibirQuestao();
+    }
+
+    function exibirQuestao() {
+      const container = document.getElementById('questoesContainer');
+      container.innerHTML = '';
+
+      questoes.forEach((questao, index) => {
+        const questaoDiv = document.createElement('div');
+        questaoDiv.className = 'questao-container' + (index !== questaoAtual ? ' escondida' : '');
+        questaoDiv.id = `questao-${index}`;
+
+        const letras = ['A', 'B', 'C', 'D', 'E', 'F'];
+        
+        questaoDiv.innerHTML = `
+          <div class="question-box">
+            <img src="img/ropo.png" alt="ícone pergunta" class="question-icon" onerror="this.style.display='none'">
+            <div class="questao-numero">Questão ${index + 1} de ${questoes.length}</div>
+            <div class="questao-enunciado">${questao.enunciado}</div>
+          </div>
+          <div class="alternativas" id="alternativas-${index}">
+            ${questao.alternativas.map((alt, altIndex) => `
+              <div class="alternativa" onclick="selecionarAlternativa(${index}, ${alt.id})">
+                <span class="letra-opcao">${letras[altIndex]}</span>
+                <input type="radio" name="questao-${index}" id="alt-${alt.id}" value="${alt.id}">
+                <label for="alt-${alt.id}">${alt.enunciado}</label>
+              </div>
+            `).join('')}
+          </div>
+        `;
+
+        container.appendChild(questaoDiv);
+      });
+
+      atualizarBotaoProximo();
+    }
+
+    function selecionarAlternativa(questaoIndex, alternativaId) {
+      const alternativasDiv = document.getElementById(`alternativas-${questaoIndex}`);
+      alternativasDiv.querySelectorAll('.alternativa').forEach(alt => {
+        alt.classList.remove('selecionada');
+      });
+
+      const alternativaClicada = alternativasDiv.querySelector(`#alt-${alternativaId}`).closest('.alternativa');
+      alternativaClicada.classList.add('selecionada');
+      
+      document.getElementById(`alt-${alternativaId}`).checked = true;
+
+      respostas[questaoIndex] = alternativaId;
+      
+      atualizarBotaoProximo();
+    }
+
+    function atualizarBotaoProximo() {
+      const btn = document.getElementById('btnProximo');
+      btn.disabled = respostas[questaoAtual] === null;
+      
+      if (questaoAtual === questoes.length - 1) {
+        btn.textContent = 'Finalizar Quiz';
+      } else {
+        btn.textContent = 'Próxima →';
+      }
+    }
+
+    function proximaQuestao() {
+      if (questaoAtual < questoes.length - 1) {
+        questaoAtual++;
+        exibirQuestao();
+      } else {
+        finalizarQuiz();
+      }
+    }
+
+    function finalizarQuiz() {
+      pontuacao = 0;
+      questoes.forEach((questao, index) => {
+        const respostaSelecionada = respostas[index];
+        const alternativaCorreta = questao.alternativas.find(alt => alt.correta === 1);
+        
+        if (respostaSelecionada === alternativaCorreta.id) {
+          pontuacao += questao.pontuacao;
+        }
+      });
+
+      document.getElementById('quizContent').style.display = 'none';
+      document.getElementById('resultadoContainer').classList.add('ativo');
+      
+      const pontuacaoMaxima = questoes.reduce((sum, q) => sum + q.pontuacao, 0);
+      document.getElementById('pontuacaoFinal').textContent = `${pontuacao}/${pontuacaoMaxima}`;
+      
+      const percentual = (pontuacao / pontuacaoMaxima) * 100;
+      let mensagem = '';
+      
+      if (percentual === 100) {
+        mensagem = 'Perfeito! Você acertou todas! 🌟';
+      } else if (percentual >= 80) {
+        mensagem = 'Excelente! Muito bem! 🎯';
+      } else if (percentual >= 60) {
+        mensagem = 'Bom trabalho! Continue estudando! 📚';
+      } else {
+        mensagem = 'Continue praticando! Você vai melhorar! 💪';
+      }
+      
+      document.getElementById('mensagemResultado').textContent = mensagem;
+    }
+
+    function reiniciarQuiz() {
+      questaoAtual = 0;
+      respostas = new Array(questoes.length).fill(null);
+      pontuacao = 0;
+      document.getElementById('resultadoContainer').classList.remove('ativo');
+      document.getElementById('quizContent').style.display = 'block';
+      exibirQuestao();
+    }
+
+    function voltarDisciplinas() {
+      window.location.href = 'disciplinaEcurso.html';
+    }
+
+    window.addEventListener('DOMContentLoaded', carregarQuestoes);
+  </script>
+</body>
+</html>
