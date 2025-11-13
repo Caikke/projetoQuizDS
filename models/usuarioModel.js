@@ -3,7 +3,7 @@ const connection = require("../config/db")
 
 const usuarioModel = {
     //função regististrar usuario
-    registarUsuario: async (usuario) => {
+    criarUsuario: async (usuario) => {
         return await (await connection).execute(
             "CALL InsertUsuario(?, ?, ?)",
             [usuario.login, usuario.email, usuario.senha]
@@ -44,6 +44,12 @@ const usuarioModel = {
 
         const usuario = result?.[0]?.[0];
         return usuario || null;
+    },
+
+    //adicionado novo metodo
+
+    atualizarPontos: async (pontos,id) => {
+        return (await connection).execute("update usuario set pontuacao = ? where id = ?", [pontos,id])
     }
 
 

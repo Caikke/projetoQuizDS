@@ -2,24 +2,30 @@ const db = require('../config/db.js');
 
 
 const cursoModel = {
-    novoRegistro: async (curso) => {
-        const sql = 'CALL inserir_curso(?, ?)';
+    criarCurso: async (curso) => {
+        const sql = 'CALL InsertCurso(?, ?)';
         const res = (await db).execute(sql, [curso.nome, curso.sigla]);
         return res;
     },
 
-    edicaoRegistro: async (curso) => {
-        const sql = 'CALL editar_curso_por_id(?, ?, ?)';
+    selecionarTodosCurso: async () => {
+        const conn = await db;
+        const [rows] = await conn.execute("CALL SelectCurso()");
+        return rows[0];
+    },
+
+    altualizarCurso: async (curso) => {
+        const sql = 'CALL UpdateCurso(?, ?, ?)';
         const res = (await db).execute(sql, [curso.id, curso.nome, curso.sigla]);
 
         return res
 
     },
 
-    excluirRegistro: async (id) => {
+    deletarCurso: async (id) => {
         try {
 
-            const sql = 'CALL excluir_curso_por_id(?)'
+            const sql = 'CALL DeleteCurso(?)'
 
             return (await db).execute(sql, [id])
 
@@ -28,12 +34,6 @@ const cursoModel = {
         }
 
     },
-
-    consultarTodosRegistros: async () => {
-        const conn = await db;
-        const [rows] = await conn.execute("CALL SelectCurso()");
-        return rows[0];
-    }
 
 
 };

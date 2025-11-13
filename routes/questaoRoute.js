@@ -1,13 +1,13 @@
 const express = require("express");
 const router = express.Router();
-const {
-    novaQuestao,
-    atualizarQuestao,
-    deletarQuestao
-} = require("../controllers/questaoController");
+const questaoController = require("../controllers/questaoController");
 
-router.post("/questoes", novaQuestao);
-router.put("/questoes/:id", atualizarQuestao);
-router.delete("/questoes/:id", deletarQuestao);
+// CRUD - questao
+router.post("/questoes", questaoController.criarQuestao);
+router.put("/questoes/:id", questaoController.atualizarQuestao);
+router.delete("/questoes/:id", questaoController.deletarQuestao);
+
+//NOVA ROTA
+router.get("/api/questaoByDisciplinaId/:id", questaoController.findQuestoesByDiscipinaId)
 
 module.exports = router;

@@ -1,52 +1,44 @@
 const db = require('../config/db');
 
-const insertAlternativa = async (alternativa) => {
-        
-        return(await db).execute(
-            'INSERT into alternativa(questao_id, enunciado, correto) values (?, ?, ?)'
-
+const alternativaModel = {
+    criarAlternativa: async (alternativa) => {
+        return (await db).execute(
+            'call InsertAlternativa(?, ?, ?)',
             [alternativa.questao_id, alternativa.enunciado, alternativa.correto]
         );
-}
+    },
 
-const updateAlternativa = async (alternativa) => {
-
-        return(await db).execute(
-            'UPDATE alternativa set questao_id = ?, enunciado = ?, correto = ? WHERE id = ?'
-
-            [alternativa.questao_id, alternativa.enunciado, alternativa.correto]
+    selecionarTodasAlternativas: async () => {
+        return (await db).execute(
+            'CALL selectAlternativa()'
         );
-}
+    },
 
-const deleteAlternativa = async(id) => {
+    atualizarAlternativa: async (alternativa) => {
+        return (await db).execute(
+            'call UpdateAlternativa(?, ?, ?, ?)',
+            [alternativa.id, alternativa.questao_id, alternativa.enunciado, alternativa.correto]
+        );
+    },
 
-    return (await db).execute(
-        'CALL deleteAlternativa(?)'
-
-        [id]
-    );
-}
-
-const selectAlternativa = async() => {
-
-    return(await db).execute(
-        'CALL selectAlternativa()'
-    );
-}
-
-const consultarAlternativaPorIDQuestao = async(id) => {
-
-     return(await db).execute(
-            'SELECT * FROM alternativa WHERE questao_id = ?'
-
+    deletarAlternativa: async (id) => {
+        return (await db).execute(
+            'CALL DeleteAlternativa(?)',
             [id]
         );
-}
+    },
 
-  module.exports = {
-    insertAlternativa,
-    updateAlternativa,
-    deleteAlternativa,
-    selectAlternativa,
-    consultarAlternativaPorIDQuestao
-  }
+    consultarAlternativaPorIDQuestao: async (id) => {
+        return (await db).execute(
+            'SELECT * FROM alternativa WHERE questao_id = ?',
+            [id]
+        );
+    },
+
+    // adicionado novo metodo
+    findAlternativaById: async (id) => {
+        return (await db).execute("select * from alternativa where id = ?", [id])
+    }
+};
+
+module.exports = alternativaModel;
