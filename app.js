@@ -51,7 +51,11 @@ app.get('/quiz', (req, res) => {
 
 app.get('/ranking', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'ranking.html'));
-});
+});  
+
+app.get('/indexLogado', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'indexLogado.html'));
+});  
 
 app.listen(PORT, () => {
         console.log(`Servidor rodando em http://localhost:${PORT}`);
