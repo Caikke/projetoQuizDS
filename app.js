@@ -42,6 +42,18 @@ app.get('/disciplinaEcurso', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'disciplinaEcurso.html'));
 });
 
+app.get('/esquecisenha', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'esquecisenha.html'));
+});
+
+app.get('/quiz', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'quiz.html'));
+});
+
+app.get('/ranking', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'ranking.html'));
+});
+
 app.listen(PORT, () => {
         console.log(`Servidor rodando em http://localhost:${PORT}`);
     });
