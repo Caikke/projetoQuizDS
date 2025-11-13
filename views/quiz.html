@@ -49,28 +49,13 @@
   </div>
 
   <script>
+
     let questoes = [];
     let questaoAtual = 0;
     let respostas = [];
     let pontuacao = 0;
     let disciplinaId = null;
-
-    const disciplinas = {
-      1: 'Programação de Algoritmos',
-      2: 'Banco de Dados',
-      3: 'Desenvolvimento de Sistemas',
-      4: 'Programação de Aplicativos Mobile',
-      5: 'Análise e Projeto de Sistemas',
-      6: 'Sistemas Embarcados',
-      7: 'Segurança de Sistemas de Informação',
-      8: 'Internet e Protocolos',
-      9: 'Inglês Instrumental',
-      10: 'Design Digital',
-      11: 'Ética e Cidadania Organizacional',
-      12: 'Linguagem, Trabalho e Tecnologia',
-      13: 'Programação Web',
-      14: 'Operação de Software Aplicativo'
-    };
+    let alternativas = []
 
     function obterDisciplinaDaURL() {
       const params = new URLSearchParams(window.location.search);
@@ -85,10 +70,21 @@
         return;
       }
 
-      document.getElementById('disciplinaNome').textContent = disciplinas[disciplinaId] || 'Disciplina';
+      fetch("/api/disciplina/" + disciplinaId, {
+        method: "GET",
+        headers: {
+          "content-Type": "application/json",
+          "bearer": localStorage.getItem("token")
+        }
+      })
+        .then(response => response.json())
+        .then(result => {
+          document.getElementById('disciplinaNome').textContent = result.nome
+        })
+        .catch(err => console.error(err))
 
       try {
-        questoes = gerarQuestoesExemplo(disciplinaId);
+        questoes = await gerarQuestoesExemplo(disciplinaId);
         
         if (questoes.length === 0) {
           mostrarErro('Nenhuma questão encontrada para esta disciplina.');
@@ -101,65 +97,21 @@
       }
     }
 
-    function gerarQuestoesExemplo(discId) {
-      const exemplos = [
-        {
-          id: 1,
-          enunciado: `Questão exemplo de ${disciplinas[discId]}. Qual é a resposta correta?`,
-          pontuacao: 20,
-          alternativas: [
-            { id: 1, enunciado: 'Alternativa A', correta: 1 },
-            { id: 2, enunciado: 'Alternativa B', correta: 0 },
-            { id: 3, enunciado: 'Alternativa C', correta: 0 },
-            { id: 4, enunciado: 'Alternativa D', correta: 0 }
-          ]
-        },
-        {
-          id: 2,
-          enunciado: 'Segunda questão de exemplo. Escolha a opção correta:',
-          pontuacao: 20,
-          alternativas: [
-            { id: 5, enunciado: 'Opção 1', correta: 0 },
-            { id: 6, enunciado: 'Opção 2', correta: 1 },
-            { id: 7, enunciado: 'Opção 3', correta: 0 },
-            { id: 8, enunciado: 'Opção 4', correta: 0 }
-          ]
-        },
-        {
-          id: 3,
-          enunciado: 'Terceira questão. Marque a alternativa verdadeira:',
-          pontuacao: 20,
-          alternativas: [
-            { id: 9, enunciado: 'Verdadeiro A', correta: 0 },
-            { id: 10, enunciado: 'Verdadeiro B', correta: 0 },
-            { id: 11, enunciado: 'Verdadeiro C', correta: 1 },
-            { id: 12, enunciado: 'Verdadeiro D', correta: 0 }
-          ]
-        },
-        {
-          id: 4,
-          enunciado: 'Quarta questão do quiz. Qual alternativa está correta?',
-          pontuacao: 20,
-          alternativas: [
-            { id: 13, enunciado: 'Alternativa I', correta: 0 },
-            { id: 14, enunciado: 'Alternativa II', correta: 0 },
-            { id: 15, enunciado: 'Alternativa III', correta: 0 },
-            { id: 16, enunciado: 'Alternativa IV', correta: 1 }
-          ]
-        },
-        {
-          id: 5,
-          enunciado: 'Última questão! Escolha a resposta certa:',
-          pontuacao: 20,
-          alternativas: [
-            { id: 17, enunciado: 'Resposta X', correta: 0 },
-            { id: 18, enunciado: 'Resposta Y', correta: 1 },
-            { id: 19, enunciado: 'Resposta Z', correta: 0 },
-            { id: 20, enunciado: 'Resposta W', correta: 0 }
-          ]
-        }
-      ];
-      return exemplos;
+    async function gerarQuestoesExemplo(disciplinaId) {
+      try {
+        const response = await fetch("/api/questaoByDisciplinaId/" + disciplinaId, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "bearer": localStorage.getItem("token")
+          }
+        });
+        const questoes = await response.json();
+        return questoes;
+      } catch (err) {
+        console.error(err);
+        return [];
+      }
     }
 
     function mostrarErro(mensagem) {
@@ -185,12 +137,12 @@
         questaoDiv.id = `questao-${index}`;
 
         const letras = ['A', 'B', 'C', 'D', 'E', 'F'];
-        
+
         questaoDiv.innerHTML = `
           <div class="question-box">
-            <img src="img/ropo.png" alt="ícone pergunta" class="question-icon" onerror="this.style.display='none'">
+            <img src="img/robo.png" alt="ícone pergunta" class="question-icon" onerror="this.style.display='none'">
             <div class="questao-numero">Questão ${index + 1} de ${questoes.length}</div>
-            <div class="questao-enunciado">${questao.enunciado}</div>
+            <div class="questao-enunciado">${questao.questaoEnunciado}</div>
           </div>
           <div class="alternativas" id="alternativas-${index}">
             ${questao.alternativas.map((alt, altIndex) => `
@@ -215,13 +167,14 @@
         alt.classList.remove('selecionada');
       });
 
+
       const alternativaClicada = alternativasDiv.querySelector(`#alt-${alternativaId}`).closest('.alternativa');
       alternativaClicada.classList.add('selecionada');
-      
+
       document.getElementById(`alt-${alternativaId}`).checked = true;
 
       respostas[questaoIndex] = alternativaId;
-      
+
       atualizarBotaoProximo();
     }
 
@@ -248,18 +201,19 @@
     function finalizarQuiz() {
       pontuacao = 0;
       questoes.forEach((questao, index) => {
+        alternativas.push(respostas[index])
         const respostaSelecionada = respostas[index];
         const alternativaCorreta = questao.alternativas.find(alt => alt.correta === 1);
         
         if (respostaSelecionada === alternativaCorreta.id) {
-          pontuacao += questao.pontuacao;
+          pontuacao += questao.questaoPontuacao;
         }
       });
 
       document.getElementById('quizContent').style.display = 'none';
       document.getElementById('resultadoContainer').classList.add('ativo');
       
-      const pontuacaoMaxima = questoes.reduce((sum, q) => sum + q.pontuacao, 0);
+      const pontuacaoMaxima = questoes.reduce((sum, q) => sum + q.questaoPontuacao, 0);
       document.getElementById('pontuacaoFinal').textContent = `${pontuacao}/${pontuacaoMaxima}`;
       
       const percentual = (pontuacao / pontuacaoMaxima) * 100;
@@ -276,6 +230,18 @@
       }
       
       document.getElementById('mensagemResultado').textContent = mensagem;
+
+      fetch("/api/pontuar",{
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "bearer": localStorage.getItem("token")
+          },
+        body:JSON.stringify({
+          alternativasId: alternativas 
+        })
+
+      })
     }
 
     function reiniciarQuiz() {

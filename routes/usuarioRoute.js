@@ -4,9 +4,10 @@ const router = express.Router();
 const usuarioController = require("../controllers/usuarioController");
 const usuarioModel = require("../models/usuarioModel");
 const jwt = require("jsonwebtoken");
+const verificarJWT = require("../config/middleware/verifyToken")
 
-
-router.post("/api/cadastrar", usuarioController.registrar);
+// CRUD - usuario
+router.post("/api/cadastrar", usuarioController.criarUsuario);
 
 
 router.post("/api/login", async (req, res) => {
@@ -23,14 +24,10 @@ router.post("/api/login", async (req, res) => {
     const token = jwt.sign(
       { userId: usuario.id },
       process.env.SECRET,
-      { expiresIn: 300 } 
+      { expiresIn: 2000000 } 
     );
 
-    res.status(200).json({
-      message: `Bem-vindo(a), ${usuario.login}!`,
-      token,
-      usuario
-    });
+    res.status(200).json({token: token});
   } catch (err) {
     console.error("Erro no login:", err);
     res.status(500).json({ message: "Erro interno no login" });
@@ -38,7 +35,7 @@ router.post("/api/login", async (req, res) => {
 });
 
 
-router.post("/pontuar", usuarioController.pontuar);
+router.post("/api/pontuar", verificarJWT, usuarioController.atualizarPontos);
 
 router.get("/usuario/:email", usuarioController.buscarPorEmail);
 

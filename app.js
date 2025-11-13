@@ -20,7 +20,6 @@ app.use(cursoRoute)
 app.use(disciplinaRoute)
 app.use(questaoRoute)
 
-
 // Rotas para cada página
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'index.html'));

@@ -1,8 +1,11 @@
 const usuarioModel = require("../models/usuarioModel");
+const alternativaModel = require("../models/alternativaModel")
+const questaoModel = require("../models/questoesModel")
 
 const usuarioController = {
   
-  registrar: async (req, res) => {
+  // POST - criar usuario
+  criarUsuario: async (req, res) => {
     try {
       const { login, email, senha } = req.body;
 
@@ -12,7 +15,7 @@ const usuarioController = {
       }
 
       const usuario = { login, email, senha }; // senha em texto puro
-      const [result] = await usuarioModel.registarUsuario(usuario);
+      const [result] = await usuarioModel.criarUsuario(usuario);
 
       res.status(201).json({ insertId: result.insertId });
     } catch (err) {
@@ -63,6 +66,27 @@ const usuarioController = {
     } catch (err) {
       console.error("Erro ao buscar usuário:", err);
       res.status(500).json({ mensagem: "Erro ao buscar usuário" });
+    }
+  },
+
+  // adicionado novo metodo
+
+  atualizarPontos: async (req, res) => {
+    const { alternativasId } = req.body
+    const id = req.userId
+    let pontos = 0
+    try{
+      for(let i = 0; i < alternativasId.length; i++){
+        const [alternativa] = await alternativaModel.findAlternativaById(alternativasId[i])
+        const [questao] = await questaoModel.findQuestaoById(alternativa[0].questao_id)
+        if(alternativa[0].correta === 1) pontos += questao[0].pontuacao
+      }
+
+      usuarioModel.atualizarPontos(pontos,id)
+      res.status(200).json({message: "deu certo"})
+    }catch(err){
+      res.status(400).json({message:"deu errado"})
+      console.error(err)
     }
   }
 };

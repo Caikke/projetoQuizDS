@@ -1,33 +1,34 @@
-const model = require("../models/disciplinaModel");
+const disciplinaModel = require("../models/disciplinaModel");
 
 const disciplinaController = {
-    // GET - Listar disciplinas
-    getDisciplinas: async (req, res) => {
-        try {
-            const [rows] = await model.selectDisciplinas();
-            res.json(rows);
-        } catch (error) {
-            res.status(500).json({ error: "Erro ao buscar" });
-        }
-    },
 
     // POST - Criar disciplina
-    createDisciplinas: async (req, res) => {
+    criarDisciplina: async (req, res) => {
         const { nome, curso_id, sigla } = req.body;
         try {
-            await model.insertDisciplina({ nome, curso_id, sigla });
+            await disciplinaModel.criarDisciplina({ nome, curso_id, sigla });
             res.status(201).json({ message: "Disciplina criada!" });
         } catch (error) {
             res.status(500).json({ error: "Erro ao criar disciplina." });
         }
     },
 
+    // GET - Listar disciplinas
+    selecionarTodasDisciplinas: async (req, res) => {
+        try {
+            const [rows] = await disciplinaModel.selecionarTodasDisciplinas();
+            res.json(rows);
+        } catch (error) {
+            res.status(500).json({ error: "Erro ao buscar" });
+        }
+    },
+
     // PUT - Atualizar disciplina
-    updateDisciplinas: async (req, res) => {
+    atualizarDisciplina: async (req, res) => {
         const { id } = req.params;
         const { nome, curso_id, sigla } = req.body;
         try {
-            await model.updateDisciplina({ id, nome, curso_id, sigla });
+            await disciplinaModel.atualizarDisciplina({ id, nome, curso_id, sigla });
             res.json({ message: "Disciplina atualizada com sucesso!" });
         } catch (error) {
             res.status(500).json({ error: "Erro ao atualizar disciplina." });
@@ -35,10 +36,10 @@ const disciplinaController = {
     },
 
     // DELETE - Deletar disciplina
-    deleteDisciplina: async (req, res) => {
+    deletarDisciplina: async (req, res) => {
         const { id } = req.params;
         try {
-            await model.deleteDisciplina(id);
+            await disciplinaModel.deletarDisciplina(id);
             res.json({ message: "Disciplina excluída!" });
         } catch (error) {
             res.status(500).json({ error: "Erro ao excluir disciplina." });
@@ -54,7 +55,7 @@ const disciplinaController = {
         }
 
         try {
-            const disciplinas = await model.consultarTodasDisciplinas();
+            const disciplinas = await disciplinaModel.consultarTodasDisciplinas();
             const filtradas = disciplinas.filter(d => d.curso_id == id);
 
             if (filtradas.length === 0) {
@@ -65,6 +66,32 @@ const disciplinaController = {
         } catch (error) {
             console.error('Erro ao consultar disciplinas:', error);
             res.status(500).json({ error: 'Erro interno ao consultar disciplinas.' });
+        }
+    },
+
+    // adicionado novos metodos
+
+    consultaTodasDisciplinas: async (req, res) => {
+        try{
+            const result = await disciplinaModel.consultarTodasDisciplinas()
+            res.status(200).json(result)
+        }catch(err){
+            res.status(400)
+            console.error(err)
+        }
+    },
+
+    findDisciplinaById: async (req, res) => {
+        const { id } = req.params
+
+        if(!id) return res.status(400)
+
+        try {
+            const [result] = await disciplinaModel.findDisciplinaById(id)
+            res.status(200).json(result[0])
+        } catch (error) {
+            res.status(400).json({message: "erro"})
+            console.error(error)            
         }
     }
 
