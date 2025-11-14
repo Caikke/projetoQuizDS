@@ -199,50 +199,59 @@
     }
 
     function finalizarQuiz() {
-      pontuacao = 0;
-      questoes.forEach((questao, index) => {
-        alternativas.push(respostas[index])
-        const respostaSelecionada = respostas[index];
-        const alternativaCorreta = questao.alternativas.find(alt => alt.correta === 1);
-        
-        if (respostaSelecionada === alternativaCorreta.id) {
-          pontuacao += questao.questaoPontuacao;
-        }
-      });
+  pontuacao = 0;
+  questoes.forEach((questao, index) => {
+    alternativas.push(respostas[index]);
+    const respostaSelecionada = respostas[index];
+    const alternativaCorreta = questao.alternativas.find(alt => alt.correta === 1);
+    
+    // Adiciona a classe 'correta' na alternativa correta
+    const alternativaCorretaDiv = document.getElementById(`alternativas-${index}`).querySelector(`#alt-${alternativaCorreta.id}`).closest('.alternativa');
+    alternativaCorretaDiv.classList.add('correta');
 
-      document.getElementById('quizContent').style.display = 'none';
-      document.getElementById('resultadoContainer').classList.add('ativo');
-      
-      const pontuacaoMaxima = questoes.reduce((sum, q) => sum + q.questaoPontuacao, 0);
-      document.getElementById('pontuacaoFinal').textContent = `${pontuacao}/${pontuacaoMaxima}`;
-      
-      const percentual = (pontuacao / pontuacaoMaxima) * 100;
-      let mensagem = '';
-      
-      if (percentual === 100) {
-        mensagem = 'Perfeito! Você acertou todas! 🌟';
-      } else if (percentual >= 80) {
-        mensagem = 'Excelente! Muito bem! 🎯';
-      } else if (percentual >= 60) {
-        mensagem = 'Bom trabalho! Continue estudando! 📚';
-      } else {
-        mensagem = 'Continue praticando! Você vai melhorar! 💪';
-      }
-      
-      document.getElementById('mensagemResultado').textContent = mensagem;
-
-      fetch("/api/pontuar",{
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "bearer": localStorage.getItem("token")
-          },
-        body:JSON.stringify({
-          alternativasId: alternativas 
-        })
-
-      })
+    // Se o usuário selecionou a alternativa correta, marca a pontuação
+    if (respostaSelecionada === alternativaCorreta.id) {
+      pontuacao += questao.questaoPontuacao;
+    } else {
+      // Se o usuário errou, adiciona a classe 'incorreta' na alternativa escolhida
+      const alternativaErradaDiv = document.getElementById(`alternativas-${index}`).querySelector(`#alt-${respostaSelecionada}`).closest('.alternativa');
+      alternativaErradaDiv.classList.add('incorreta');
     }
+  });
+
+  document.getElementById('quizContent').style.display = 'none';
+  document.getElementById('resultadoContainer').classList.add('ativo');
+  
+  const pontuacaoMaxima = questoes.reduce((sum, q) => sum + q.questaoPontuacao, 0);
+  document.getElementById('pontuacaoFinal').textContent = `${pontuacao}/${pontuacaoMaxima}`;
+  
+  const percentual = (pontuacao / pontuacaoMaxima) * 100;
+  let mensagem = '';
+  
+  if (percentual === 100) {
+    mensagem = 'Perfeito! Você acertou todas! 🌟';
+  } else if (percentual >= 80) {
+    mensagem = 'Excelente! Muito bem! 🎯';
+  } else if (percentual >= 60) {
+    mensagem = 'Bom trabalho! Continue estudando! 📚';
+  } else {
+    mensagem = 'Continue praticando! Você vai melhorar! 💪';
+  }
+  
+  document.getElementById('mensagemResultado').textContent = mensagem;
+
+  fetch("/api/pontuar", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "bearer": localStorage.getItem("token")
+    },
+    body: JSON.stringify({
+      alternativasId: alternativas
+    })
+  });
+}
+
 
     function reiniciarQuiz() {
       questaoAtual = 0;
