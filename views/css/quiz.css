@@ -173,6 +173,10 @@ body {
   gap: 10px;
 }
 
+.alternativas.desabilitada .alternativa {
+        cursor: default;
+    }
+
 .alternativa input[type="radio"] {
   display: none;
 }
@@ -202,9 +206,15 @@ body {
   transform: scale(1.03);
 }
 
+.alternativas.desabilitada .alternativa:hover {
+        background-color: inherit;
+        transform: none;
+    }
+
 .alternativa.selecionada {
   background-color: #017d7d;
   border-color: #FFD700;
+  color: white;
 }
 
 .alternativa.correta {
@@ -216,12 +226,6 @@ body {
 .alternativa.incorreta {
   background-color: #dc3545;
   border-color: #f8d7da;
-  color: white;
-}
-
-.alternativa.selecionada {
-  background-color: #017d7d;
-  border-color: #FFD700;
   color: white;
 }
 
