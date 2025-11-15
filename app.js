@@ -20,7 +20,6 @@ app.use(cursoRoute)
 app.use(disciplinaRoute)
 app.use(questaoRoute)
 
-
 // Rotas para cada página
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'index.html'));
@@ -41,6 +40,22 @@ app.get('/sobre', (req, res) => {
 app.get('/disciplinaEcurso', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'disciplinaEcurso.html'));
 });
+
+app.get('/esquecisenha', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'esquecisenha.html'));
+});
+
+app.get('/quiz', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'quiz.html'));
+});
+
+app.get('/ranking', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'ranking.html'));
+});  
+
+app.get('/indexLogado', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'indexLogado.html'));
+});  
 
 app.listen(PORT, () => {
         console.log(`Servidor rodando em http://localhost:${PORT}`);
