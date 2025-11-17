@@ -29,6 +29,8 @@
       Carregando questões...
     </div>
 
+    <div id="erroContainer" class="erro" style="display:none;"></div>
+
     <div id="quizContent" style="display: none;">
       <div id="questoesContainer"></div>
 
@@ -162,7 +164,9 @@
     }
 
     function selecionarAlternativa(questaoIndex, alternativaId) {
+      const questao = questoes[questaoIndex];
       const alternativasDiv = document.getElementById(`alternativas-${questaoIndex}`);
+      const alternativaCorreta = questao.alternativas.find(alt => alt.correta === 1);
       alternativasDiv.querySelectorAll('.alternativa').forEach(alt => {
         alt.classList.remove('selecionada');
       });
@@ -170,10 +174,23 @@
 
       const alternativaClicada = alternativasDiv.querySelector(`#alt-${alternativaId}`).closest('.alternativa');
       alternativaClicada.classList.add('selecionada');
-
       document.getElementById(`alt-${alternativaId}`).checked = true;
-
       respostas[questaoIndex] = alternativaId;
+
+      alternativasDiv.classList.add('desabilitada');
+      alternativasDiv.querySelectorAll('.alternativa').forEach(alt => {
+      alt.onclick = null; 
+});
+      
+  // Aplicar a classe CORRETA (verde) à alternativa correta
+      const alternativaCorretaDiv = alternativasDiv.querySelector(`#alt-${alternativaCorreta.id}`).closest('.alternativa');
+       alternativaCorretaDiv.classList.add('correta');
+
+
+    // Aplicar a classe INCORRETA (vermelho) SE o usuário errou
+    if (alternativaId !== alternativaCorreta.id) {
+    alternativaClicada.classList.add('incorreta');
+ }
 
       atualizarBotaoProximo();
     }
