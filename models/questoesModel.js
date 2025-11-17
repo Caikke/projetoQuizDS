@@ -33,7 +33,7 @@ const questaoModel = {
     findQuestoesByDiscipinaId: async (id) => {
         const [res] = await disciplinaModel.findDisciplinaById(id)
 
-        const [questoes] = await (await connection).execute("select * from questao where disciplina_id = ?", [res[0].id])
+        const [questoes] = await (await connection).execute("select * from questao where disciplina_id = ? order by rand() limit 5", [res[0].id])
 
         let resQuestoes = []
 
