@@ -1,3 +1,4 @@
+/* Reset */
 * {
   margin: 0;
   padding: 0;
@@ -5,72 +6,94 @@
   font-family: "Poppins", sans-serif;
 }
 
-/* Fundo */
+/* Fundo com imagem + gradiente */
 body {
   min-height: 100vh;
-  background-color: #008080;
-  color: #000000;
+  background: 
+      url('../img/ImgEsquecisenha.png') repeat, /* coloque o caminho da imagem */
+      linear-gradient(#013243, #001E25);
+  background-size: 250px;
+  background-blend-mode: normal;
+  
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
 }
-.ema{
-    font-size: 13px;
-    padding: 7px 365px;
-  border-radius: 8px;
-  font-family: Arial, Helvetica, sans-serif;
-  text-align: left;
-  padding-left: 10px;
-}
-.lin{
-  text-decoration: none;
-  font-weight: 500;
-  color: #008B8B;
-}
-.lin:hover{
-  color: #00bcd4;
-}
 
-
-/* Botão de Enviar link */
-.login-btn {
-  background: linear-gradient(#04c8c8);
-  padding: 7px 250px;
-  border-radius: 8px;
-  transition: 0.3s;
-  border: 15px;
-  border-color: #000000;
-  
-  
-}
-
-.login-btn:hover {
-  background: linear-gradient(90deg, #2196f3, #00bcd4);
-}
-
-/* 🔹 Conteúdo principal */
+/* Conteúdo central */
 .container {
   background: #ffffff;
   padding: 40px 60px;
   border-radius: 15px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
   text-align: left;
-  backdrop-filter: blur(10px);
-  max-width: 800px;
-  margin-top: 120px;
+  max-width: 480px;
+  width: 90%;
 }
 
 /* Título */
 .container h1 {
-  font-size: 30px;
-  color: #008B8B;
-  margin-bottom: 7px;
+  font-size: 32px;
+  color: #2F8788;
+  font-weight: 700;
+  margin-bottom: 10px;
 }
 
-/* Parágrafos */
+/* Subtítulo */
+.container h2 {
+  font-size: 18px;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+/* Texto */
 .container p {
-  font-size: 1em;
-  color: #000000;
-  line-height: 1.6em;
+  font-size: 14px;
+  color: #000;
   margin-bottom: 15px;
+}
+
+/* Campo de input */
+.ema {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #aaa;
+  font-size: 14px;
+  margin-bottom: 15px;
+}
+
+/* Botão */
+.login-btn {
+  width: 100%;
+  background: #2F8788;
+  color: #fff;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.login-btn:hover {
+  background: #236566;
+}
+
+/* Links */
+.lin {
+  text-decoration: none;
+  color: #2F8788;
+  font-weight: 500;
+}
+
+.lin:hover {
+  color: #00bcd4;
+}
+
+/* Ajuste responsivo */
+@media (max-width: 480px) {
+  .container {
+    padding: 25px;
+  }
 }
