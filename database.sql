@@ -344,6 +344,41 @@ END //
 
 DELIMITER ;
 
+DELIMITER //
+
+### Selecionar uma questão pelo ID ###
+CREATE PROCEDURE SelectQuestaoPorId(IN xId INT)
+BEGIN
+    SELECT * FROM questao WHERE id = xId;
+END //
+
+
+############# Selecionar 5 questões aleatórias de uma disciplina #####################
+CREATE PROCEDURE SelectCincoQuestoesAleatoriasPorDisciplina(IN xDisciplinaId INT)
+BEGIN
+    SELECT * 
+    FROM questao
+    WHERE disciplina_id = xDisciplinaId
+    ORDER BY RAND()
+    LIMIT 5;
+END //
+
+############ Atualizar a pontuação de um usuário #############
+CREATE PROCEDURE UpdatePontuacaoUsuario(IN xUsuarioId INT, IN xPontuacao INT)
+BEGIN
+    UPDATE usuario
+    SET pontuacao = xPontuacao
+    WHERE id = xUsuarioId;
+END //
+
+################ Selecionar uma alternativa pelo ID #####################
+CREATE PROCEDURE SelectAlternativaPorId(IN xId INT)
+BEGIN
+    SELECT * FROM alternativa WHERE id = xId;
+END //
+
+DELIMITER ;
+
 
 ################ Escolhas ####################
 
