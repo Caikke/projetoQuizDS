@@ -114,7 +114,7 @@ INSERT INTO alternativa VALUES
 (59, 15,'NÃO ou !', 1),
 (60, 15,'=', 0);
 
-######### Banco de dados  ###########
+######## Banco de dados  ##########
 
 INSERT INTO questao VALUES
 (16,'O que é um Sistema Gerenciador de Banco de Dados Relacional (SGBDR)?', 10, 2),
@@ -223,7 +223,7 @@ INSERT INTO alternativa VALUES
 (119, 30,'O mapeamento de um relacionamento N:N para uma tabela associativa.', 0),
 (120, 30,'A criação de uma tabela com apenas uma Chave Primária.', 0);
 
-######### Desenvolvimento de Sistema  ###########
+######### Desenvolvimento de Sistema  ##########
 
 INSERT INTO questao VALUES
 (31,'Em Programação Orientada a Objetos (POO), o que define a estrutura (atributos) e o comportamento (métodos) de um conjunto de objetos?', 10, 3),
