@@ -5,7 +5,7 @@ use projetoQuiz;
 
 ######### CURSO DS ##############
 
-######### Programação e Algoritmos  #########
+######## Programação e Algoritmos  ########
 INSERT INTO questao VALUES
 (1,'Qual das opções representa corretamente uma estrutura de repetição para (for), que executa um bloco de código 10 vezes (de 1 a 10)?', 10, 1),
 (2,'Qual dos seguintes tipos de dados é apropriado para armazenar um número com casas decimais?',10, 1),
