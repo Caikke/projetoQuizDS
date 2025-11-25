@@ -13,11 +13,12 @@
 <body>
   <header class="navbar">
     <div class="logo-container">
-      <div class="logo">Quiz Interativo</div>
+      <div class="logo">Quiz Interativo, <span id="usuario" style="color: #FFD700;"></span></div>
     </div>
     <nav>
       <a href="/indexLogado" class="linkT">Início</a>
       <a href="/disciplinaEcurso" class="linkT">Disciplinas</a>
+      <a onclick="deslogar()">deslogar</a>
     </nav>
   </header>
 
@@ -54,6 +55,32 @@
   </div>
 
   <script>
+
+    const usuario = document.querySelector("#usuario")
+
+    fetch("/api/usuario", {
+      method: "GET",
+      headers: {
+        "content-Type": "application/json",
+        "bearer": localStorage.getItem("token")
+      }
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json()
+        } else {
+          location.href = "/login"
+        }
+      })
+      .then((result) => {
+        usuario.innerHTML = result
+      })
+      .catch((err) => (console.error(err)))
+
+    function deslogar() {
+      localStorage.clear()
+      location.href = "/"
+    }
 
     let questoes = [];
     let questaoAtual = 0;
@@ -274,12 +301,13 @@
     }
 
 
-    function reiniciarQuiz() {
+    async function reiniciarQuiz() {
       questaoAtual = 0;
       respostas = new Array(questoes.length).fill(null);
       pontuacao = 0;
       document.getElementById('resultadoContainer').classList.remove('ativo');
       document.getElementById('quizContent').style.display = 'block';
+      questoes = await gerarQuestoesExemplo(disciplinaId)
       exibirQuestao();
     }
 

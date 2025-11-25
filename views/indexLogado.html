@@ -1,31 +1,69 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
 	<meta charset="UTF-8">
 	<meta name="viemport" content="width=device-width, initial-scale=1.0">
 	<title>Quiz Educacional</title>
 	<link rel="stylesheet" href="css/indexLogado.css">
 </head>
+
 <body>
 	<header class="navbar">
 		<div class="logo">Quiz Interativo</div>
 		<nav>
+			<ul>
+				<li><a href="/indexLogado">Início</a></li>
+				<li><a onclick="deslogar()">deslogar</a></li>
+			</ul>
 		<ul>
 		<li><a href="/indexLogado" class="inicio">Início</a></li>
 		</ul>
 		</nav>
 	</header>
-<br><br><br><br>
+	<br><br><br><br>
 
-<h1>Bem-vindo ao Quiz Interativo!</h1>
+	<h1>Bem-vindo ao Quiz Interativo <span id="usuario"></span>!</h1>
 
-<div class="container">
-	<h2>Selecionar opção</h2>
-<br>
+	<div class="container">
+		<h2>Selecionar opção</h2>
+		<br>
 		<div id="botoes">
-		<a href="/disciplinaEcurso"><button class="btn">Iniciar Quiz</button></a>
+			<a href="/disciplinaEcurso"><button class="btn">Iniciar Quiz</button></a>
 
-		<a href="/ranking"><button class="btn">Pontuação </button></a>
+			<a href="/ranking"><button class="btn">Pontuação </button></a>
 
 		</div>
-		</div>
+	</div>
+	<script>
+
+		const usuario = document.querySelector("#usuario")
+
+		fetch("/api/usuario", {
+			method: "GET",
+			headers: {
+				"content-Type": "application/json",
+				"bearer": localStorage.getItem("token")
+			}
+		})
+			.then((response) => {
+				if (response.ok) {
+					return response.json()
+				} else {
+					location.href = "/login"
+				}
+			})
+			.then((result) => {
+				usuario.innerHTML = result
+			})
+			.catch((err) => (console.error(err)))
+
+		function deslogar() {
+			localStorage.clear()
+			location.href = "/"
+		}
+
+	</script>
+</body>
+
+</html>

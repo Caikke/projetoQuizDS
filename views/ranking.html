@@ -17,6 +17,7 @@
 
     <nav>
       <a href="/indexLogado" class="linkT">Início</a>
+      <a onclick="deslogar()">deslogar</a>
     </nav>
   </header>
 
@@ -43,11 +44,16 @@
   </main>
   <script>
 
+    function deslogar() {
+      localStorage.clear()
+      location.href = "/"
+    }
+
     const listaPontos = document.querySelector("#lista-pontos")
     const usuario = document.querySelector("#usuario")
     const top3 = document.querySelector("#top3")
 
-    fetch("/teste", {
+    fetch("/api/ranking", {
       method: "GET",
       headers: {
         "content-Type": "application/json",

@@ -46,6 +46,7 @@
     text-shadow: 0 0 6px #FFD700;
   }
 
+  .logo, #usuario {
   .navbar nav .linkT {
   display: inline-block;
   padding: 8px 16px;
