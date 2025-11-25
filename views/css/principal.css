@@ -53,23 +53,42 @@ body {
 }
 
 /* === BOTÃO ENTRAR NA NAVBAR === */
-.navbar .entrar {
-  background-color: transparent;
+.navbar nav .login-btn {
+  display: inline-block;
+  padding: 8px 16px;
   border: 2px solid #00CED1;
   border-radius: 20px;
-  padding: 8px 16px;
   color: #00CED1;
-  font-family: 'Press Start 2P', cursive;
-  font-size: 10px;
-  letter-spacing: 1px;
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 14px;
+  text-decoration: none;
   transition: all 0.3s ease;
 }
 
-.navbar .entrar:hover {
+.navbar nav .login-btn {
   background-color: #00CED1;
   color: #003333;
-  transform: scale(1.05);
   box-shadow: 0 0 10px #00CED1;
+  transform: scale(1.05);
+}
+
+.navbar nav .linkT {
+  display: inline-block;
+  padding: 8px 16px;
+  border: 2px solid #00CED1;
+  border-radius: 20px;
+  color: #00CED1;
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 14px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.navbar nav .linkT:hover {
+  background-color: #00CED1;
+  color: #003333;
+  box-shadow: 0 0 10px #00CED1;
+  transform: scale(1.05);
 }
 
 /* === LOGO DA NAVBAR (QUIZ INTERATIVO) === */
