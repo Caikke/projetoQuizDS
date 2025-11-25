@@ -8,13 +8,16 @@
 }
 
 body {
-  background: linear-gradient(135deg, #008080, #00b3b3);
+  background: url('../img/FundoVerde.jpeg') no-repeat center center fixed;
   color: #fff;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
   overflow-y: auto;
+  background-size: cover;
+  overflow-y: auto;
+  min-height: 100vh;
 }
 
 .container {

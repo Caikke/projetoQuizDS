@@ -49,6 +49,7 @@
       <div class="mensagem-resultado" id="mensagemResultado"></div>
       <button class="btn btn-reiniciar" onclick="reiniciarQuiz()">Tentar Novamente</button>
       <button class="btn btn-reiniciar" onclick="voltarDisciplinas()">Escolher Outra Disciplina</button>
+      <button class="btn btn-reiniciar" onclick="irParaRanking()">Ver Ranking</button>
     </div>
   </div>
 
@@ -288,6 +289,10 @@
     }
 
     window.addEventListener('DOMContentLoaded', carregarQuestoes);
+
+    function irParaRanking() {
+    window.location.href = "/ranking";
+  }
   </script>
 </body>
 

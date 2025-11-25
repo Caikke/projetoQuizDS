@@ -12,12 +12,39 @@ body {
   align-items: center;
   height: 100vh;
   overflow: hidden;
-  background: #008080;
+  background: linear-gradient(
+  to bottom,
+  #002633 0%,
+  #002633 40%,
+  #000C0F 60%,
+  #000C0F 100%
+);
   position: relative;
 }
 
+.btn-voltar {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  font-size: 17px;
+  text-decoration: none;
+  color: #008B8B;
+  background: transparent;
+  padding: 8px 15px;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: 0.2s;
+}
+
+.left {
+  position: relative;
+}
+
+.btn-voltar:hover {
+  opacity: 0.7;
+}
+
 .background {
-   background: #008B8B;
   position: absolute;
   inset: 0;
   z-index: -1;
