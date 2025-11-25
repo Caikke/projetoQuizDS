@@ -77,7 +77,7 @@ body {
 }
 
 /* === TÍTULOS === */
-h1 {
+h1, #usuario {
   font-family: 'Press Start 2P', cursive;
   font-size: 20px;
   color: #FFD700;

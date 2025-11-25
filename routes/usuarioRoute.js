@@ -36,7 +36,7 @@ router.post("/api/login", async (req, res) => {
 
 router.post("/api/pontuar", verificarJWT, usuarioController.atualizarPontos);
 
-router.get("/usuario/:email", verificarJWT, usuarioController.buscarPorEmail);
+router.get("/api/usuario", verificarJWT, usuarioController.buscarUsuario);
 
 // rotas para redefinição de senha
 router.post("/api/solicita-redefinir-senha", usuarioController.solicitacaoRedefinirSenha)
@@ -44,6 +44,6 @@ router.post("/api/solicita-redefinir-senha", usuarioController.solicitacaoRedefi
 router.post("/api/redefinir-senha/:token", usuarioController.redefinirSenha)
 
 //pontos dos usuarios
-router.get("/teste", verificarJWT, usuarioController.rankingUsuario)
+router.get("/api/ranking", verificarJWT, usuarioController.rankingUsuario)
 
 module.exports = router;

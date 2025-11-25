@@ -46,7 +46,7 @@
     text-shadow: 0 0 6px #FFD700;
   }
 
-  .logo {
+  .logo, #usuario {
     font-family: 'Press Start 2P', cursive;
     font-size: 10px;
     letter-spacing: 3px;

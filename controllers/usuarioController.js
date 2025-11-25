@@ -43,16 +43,19 @@ const usuarioController = {
     }
   },
 
-  buscarPorEmail: async (req, res) => {
+  buscarUsuario: async (req, res) => {
     try {
-      const { email } = req.params;
-      const usuario = await usuarioModel.pegarUsuarioPeloEmail(email);
+      const id = req.userId
+
+      if(!id) return res.json({message: "usuario nao logado"})
+
+      const [usuario] = await usuarioModel.pegarUsuarioPeloId(id);
 
       if (!usuario) {
         return res.status(404).json({ mensagem: "Usuário não encontrado!" });
       }
 
-      res.json(usuario);
+      res.json(usuario[0].login);
     } catch (err) {
       console.error("Erro ao buscar usuário:", err);
       res.status(500).json({ mensagem: "Erro ao buscar usuário" });
