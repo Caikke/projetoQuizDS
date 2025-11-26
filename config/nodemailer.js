@@ -1,26 +1,26 @@
 const nodemailer = require("nodemailer");
 
-const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
+(async () => {
+  try {
+    const transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
+      auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASSWORD
-    }
-});
+      }
+    });
 
-async function sendMail(to, subject, html) {
-    try {
-        await transporter.sendMail({
-            from: `"QuizDS" <${process.env.EMAIL_USER}>`,
-            to,
-            subject,
-            html
-        });
-        console.log("Email enviado com sucesso!");
-    } catch (error) {
-        console.error("Erro ao enviar email:", error);
-        throw error;
-    }
-}
+    await transporter.sendMail({
+      from: `"Teste" <${process.env.EMAIL_USER}>`,
+      to: process.env.EMAIL_USER,
+      subject: "Teste Nodemailer",
+      text: "Funcionou!"
+    });
 
-module.exports = sendMail;
+    console.log("Email enviado com sucesso!");
+  } catch (err) {
+    console.error("Erro:", err);
+  }
+})();
