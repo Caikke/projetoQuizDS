@@ -41,7 +41,7 @@ pages.forEach(page => {
     });
 });
 
-const sendMail = require("./mailer"); // supondo que você salvou como mailer.js
+const sendMail = require("./config/nodemailer");
 
 app.post("/send-email", async (req, res) => {
   try {
