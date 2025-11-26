@@ -5,7 +5,7 @@ const sendMail = require("../config/nodemailer");
 const jwt = require("jsonwebtoken")
 
 const usuarioController = {
-  
+
   // POST - criar usuario
   criarUsuario: async (req, res) => {
     try {
@@ -47,7 +47,7 @@ const usuarioController = {
     try {
       const id = req.userId
 
-      if(!id) return res.json({message: "usuario nao logado"})
+      if (!id) return res.json({ message: "usuario nao logado" })
 
       const [usuario] = await usuarioModel.pegarUsuarioPeloId(id);
 
@@ -68,21 +68,21 @@ const usuarioController = {
     const { alternativasId } = req.body
     const id = req.userId
     let pontos = 0
-    try{
+    try {
       const [result] = await usuarioModel.pegarUsuarioPeloId(id)
 
       pontos = result[0].pontuacao
 
-      for(let i = 0; i < alternativasId.length; i++){
+      for (let i = 0; i < alternativasId.length; i++) {
         const [alternativa] = await alternativaModel.findAlternativaById(alternativasId[i])
         const [questao] = await questaoModel.findQuestaoById(alternativa[0][0].questao_id)
-        if(alternativa[0][0].correta === 1) pontos += questao[0][0].pontuacao
+        if (alternativa[0][0].correta === 1) pontos += questao[0][0].pontuacao
       }
 
-      usuarioModel.atualizarPontos(pontos,id)
-      res.status(200).json({message: "deu certo"})
-    }catch(err){
-      res.status(400).json({message:"deu errado"})
+      usuarioModel.atualizarPontos(pontos, id)
+      res.status(200).json({ message: "deu certo" })
+    } catch (err) {
+      res.status(400).json({ message: "deu errado" })
       console.error(err)
     }
   },
@@ -95,12 +95,12 @@ const usuarioController = {
     try {
       const user = await usuarioModel.pegarUsuarioPeloEmail(email)
 
-      if(!user) return res.status(404).json({ mensagem: "usuario nao encontrado" })
+      if (!user) return res.status(404).json({ mensagem: "usuario nao encontrado" })
 
       const token = jwt.sign(
-            { userId: user.id },
-            process.env.SECRET,
-            { expiresIn: 600 } 
+        { userId: user.id },
+        process.env.SECRET,
+        { expiresIn: 600 }
       )
 
       await sendMail(
@@ -110,18 +110,19 @@ const usuarioController = {
         `
         <h2> Olá, ${user.login} </h2>
         <p>Você solicitou redefinição de senha. Clique no link para redefinir sua senha: </p>
-        <a href="http://localhost:3000/redefinir-senha?t=${token}">
-          Redefinir minha senha
-        </a>
+        <a href="${process.env.APP_URL}/redefinir-senha?t=${token}">
+  Redefinir minha senha
+</a>
+
 
         <p> esse link expira em 10 minutos </p>
         `
       )
 
-      return res.json({message: "email enviado"})
+      return res.json({ message: "email enviado" })
     } catch (error) {
       console.error("falha no metodo, ", error)
-      return res.status(500).json({message: "erro interno no servidor"})
+      return res.status(500).json({ message: "erro interno no servidor" })
     }
   },
 
@@ -134,14 +135,14 @@ const usuarioController = {
       if (!token || !senha) return res.status(400).json({ message: 'Token ausente' });
 
       jwt.verify(token, process.env.SECRET, (err, decoded) => {
-              if (err) {
-                  return res.status(401).json({ message: 'Falha na verificação do token' });
-              }
-      
-              usuarioModel.atualizarUsuario({ senha }, decoded.userId)
-          });
-          
-        res.json({ message: 'senha redefinida com sucesso' })
+        if (err) {
+          return res.status(401).json({ message: 'Falha na verificação do token' });
+        }
+
+        usuarioModel.atualizarUsuario({ senha }, decoded.userId)
+      });
+
+      res.json({ message: 'senha redefinida com sucesso' })
 
     } catch (error) {
       res.status(500).json({ message: 'erro interno no servidor' })
@@ -154,7 +155,7 @@ const usuarioController = {
   rankingUsuario: async (req, res) => {
     const id = req.userId
 
-    if(!id) return res.json({ message: 'token invalido' })
+    if (!id) return res.json({ message: 'token invalido' })
 
     try {
       const [user] = await usuarioModel.pegarUsuarioPeloId(id)

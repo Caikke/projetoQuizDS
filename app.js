@@ -1,13 +1,14 @@
-const express = require('express')
-const path = require('path')
-const app = express()
+require('dotenv').config();
+const express = require('express');
+const path = require('path');
+const app = express();
 
-const PORT = 3000
+const PORT = process.env.PORT || 3000;
 
-const usuarioRoute = require("./routes/usuarioRoute")
-const cursoRoute = require("./routes/cursoRoute")
-const disciplinaRoute = require("./routes/disciplinaRoute")
-const questaoRoute = require("./routes/questaoRoute")
+const usuarioRoute = require("./routes/usuarioRoute");
+const cursoRoute = require("./routes/cursoRoute");
+const disciplinaRoute = require("./routes/disciplinaRoute");
+const questaoRoute = require("./routes/questaoRoute");
 
 // AQUI PARA VOCÊ CONECTAR A PASTA VIEWS E INDEX-------------
 // Permite acessar arquivos estáticos da pasta views (ex: CSS, JS)
@@ -21,42 +22,37 @@ app.use(disciplinaRoute)
 app.use(questaoRoute)
 
 // Rotas para cada página
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'index.html'));
-});
-app.get('/login', (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'login.html'));
-});
-app.get('/cadastro', (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'cadastro.html'));
-});
-app.get('/redefinir-senha', (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'redefinir-senha.html'));
-});
-app.get('/sobre', (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'sobre.html'));
+const pages = [
+    'index',
+    'login',
+    'cadastro',
+    'redefinir-senha',
+    'sobre',
+    'disciplinaEcurso',
+    'esquecisenha',
+    'quiz',
+    'ranking',
+    'indexLogado'
+];
+
+pages.forEach(page => {
+    app.get(`/${page === 'index' ? '' : page}`, (req, res) => {
+        res.sendFile(path.join(__dirname, 'views', `${page}.html`));
+    });
 });
 
-app.get('/disciplinaEcurso', (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'disciplinaEcurso.html'));
+const sendMail = require("./mailer"); // supondo que você salvou como mailer.js
+
+app.post("/send-email", async (req, res) => {
+  try {
+    await sendMail(req.body.to, "Teste Railway", "<h1>Funcionou!</h1>");
+    res.send("Email enviado!");
+  } catch (err) {
+    res.status(500).send("Erro: " + err.message);
+  }
 });
 
-app.get('/esquecisenha', (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'esquecisenha.html'));
-});
-
-app.get('/quiz', (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'quiz.html'));
-});
-
-app.get('/ranking', (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'ranking.html'));
-});  
-
-app.get('/indexLogado', (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'indexLogado.html'));
-});  
 
 app.listen(PORT, () => {
-        console.log(`Servidor rodando em http://localhost:${PORT}`);
-    });
+    console.log(`Servidor rodando na porta ${PORT}`);
+});

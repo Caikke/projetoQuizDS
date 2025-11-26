@@ -1,12 +1,12 @@
-const nodemailer = require("nodemailer")
+const nodemailer = require("nodemailer");
 
 const transporter = nodemailer.createTransport({
-    service: "",
+    service: "gmail",
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASSWORD
     }
-})
+});
 
 async function sendMail(to, subject, html) {
     try {
@@ -15,11 +15,12 @@ async function sendMail(to, subject, html) {
             to,
             subject,
             html
-        })
+        });
+        console.log("Email enviado com sucesso!");
     } catch (error) {
-        console.error("erro ao enviar email", error)
-        throw error
+        console.error("Erro ao enviar email:", error);
+        throw error;
     }
 }
 
-module.exports = sendMail
+module.exports = sendMail;
