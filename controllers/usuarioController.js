@@ -105,17 +105,27 @@ const usuarioController = {
         { expiresIn: 600 }
       );
 
-      await sendMail(
+ await sendMail(
         user.email,
         "Redefinição de senha",
         `
-    <h2>Olá, ${user.login}</h2>
-    <p>Você solicitou redefinição de senha. Clique no link abaixo:</p>
-    <a href="${process.env.APP_URL}/redefinir-senha?t=${token}">
-      Redefinir minha senha
-    </a>
-    <p>Esse link expira em 10 minutos.</p>
-  `
+      <div style="max-width:500px;margin:auto;background:#fff;border-radius:12px;
+                  box-shadow:0 4px 12px rgba(0,0,0,0.1);padding:30px;text-align:center;
+                  font-family:Poppins,Arial,sans-serif;">
+        <h2 style="color:#2F8788;margin-bottom:15px;">Olá, ${user.login}</h2>
+        <p style="font-size:15px;color:#333;margin-bottom:20px;line-height:1.5;">
+          Você solicitou redefinição de senha. Clique no botão abaixo para continuar:
+        </p>
+        <a href="${process.env.APP_URL}/redefinir-senha?t=${token}"
+           style="display:inline-block;background:#2F8788;color:#fff;text-decoration:none;
+                  padding:12px 20px;border-radius:8px;font-weight:600;">
+          Redefinir minha senha
+        </a>
+        <p style="font-size:12px;color:#777;margin-top:25px;">
+          Esse link expira em 10 minutos.
+        </p>
+      </div>
+      `
       );
 
       return res.json({ message: "Email enviado" });
