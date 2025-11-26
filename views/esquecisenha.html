@@ -48,40 +48,40 @@
       </div>
     </form>
   </main>
-  <script>
+<script>
+  document.querySelector("#emailPost").addEventListener("submit", async e => {
+    e.preventDefault();
 
-    document.querySelector("#emailPost").addEventListener("submit", async e => {
-      e.preventDefault();
+    const email = document.querySelector("#email").value;
 
-      const email = document.querySelector("#email").value;
+    if (!email) {
+      alert("Digite um email válido");
+      return;
+    }
 
-      if (!email) alert("digite um email valido")
+    try {
+      const response = await fetch("/api/solicita-redefinir-senha", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ email })
+      });
 
-      console.log(email)
-
-      try {
-        const response = await fetch("/api/solicita-redefinir-senha", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({ email })
-        });
-
-        if (response.ok) {
-          alert("Email foi enviado");
-          window.location.href = "/"
-        } else {
-          alert("Email inválido");
-        }
-      } catch (erro) {
-        alert("Erro na requisição");
+      if (response.ok) {
+        alert("Email foi enviado");
+        window.location.href = "/";
+      } else {
+        alert("Email inválido");
       }
+    } catch (erro) {
+      alert("Erro na requisição");
+    }
 
-      e.target.reset();
-    });
+    e.target.reset();
+  });
+</script>
 
-  </script>
 </body>
 
 </html>

@@ -90,39 +90,39 @@ const usuarioController = {
   // metodo para redefinição de senha
 
   solicitacaoRedefinirSenha: async (req, res) => {
-    const { email } = req.body
+    const { email } = req.body;
 
     try {
-      const user = await usuarioModel.pegarUsuarioPeloEmail(email)
+      const [rows] = await usuarioModel.pegarUsuarioPeloEmail(email);
+      const user = rows[0];
 
-      if (!user) return res.status(404).json({ mensagem: "usuario nao encontrado" })
+      if (!user) return res.status(404).json({ mensagem: "Usuário não encontrado" });
 
+      // gera token válido por 10 minutos
       const token = jwt.sign(
         { userId: user.id },
         process.env.SECRET,
         { expiresIn: 600 }
-      )
+      );
 
+      // chama o sendMail
       await sendMail(
         user.email,
         "Redefinição de senha",
-
         `
-        <h2> Olá, ${user.login} </h2>
-        <p>Você solicitou redefinição de senha. Clique no link para redefinir sua senha: </p>
+        <h2>Olá, ${user.login}</h2>
+        <p>Você solicitou redefinição de senha. Clique no link abaixo:</p>
         <a href="${process.env.APP_URL}/redefinir-senha?t=${token}">
-  Redefinir minha senha
-</a>
+          Redefinir minha senha
+        </a>
+        <p>Esse link expira em 10 minutos.</p>
+      `
+      );
 
-
-        <p> esse link expira em 10 minutos </p>
-        `
-      )
-
-      return res.json({ message: "email enviado" })
+      return res.json({ message: "Email enviado" });
     } catch (error) {
-      console.error("falha no metodo, ", error)
-      return res.status(500).json({ message: "erro interno no servidor" })
+      console.error("Falha no método:", error);
+      return res.status(500).json({ message: "Erro interno no servidor" });
     }
   },
 

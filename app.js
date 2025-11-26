@@ -40,19 +40,6 @@ pages.forEach(page => {
         res.sendFile(path.join(__dirname, 'views', `${page}.html`));
     });
 });
-
-const sendMail = require("./config/nodemailer");
-
-app.post("/send-email", async (req, res) => {
-  try {
-    await sendMail(req.body.to, "Teste Railway", "<h1>Funcionou!</h1>");
-    res.send("Email enviado!");
-  } catch (err) {
-    res.status(500).send("Erro: " + err.message);
-  }
-});
-
-
 app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT}`);
 });
