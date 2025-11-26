@@ -1,24 +1,22 @@
 const nodemailer = require("nodemailer");
 
-// cria o transporter uma vez
 const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 465,
-  secure: true,
+  host: "smtp.sendgrid.net",
+  port: 587,
   auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASSWORD
+    user: "apikey",
+    pass: process.env.SENDGRID_API_KEY
   }
 });
 
-// função reutilizável
 async function sendMail(to, subject, html) {
   try {
     await transporter.sendMail({
       from: `"QuizDS" <${process.env.EMAIL_USER}>`,
       to,
       subject,
-      html
+      html, // ✅ recebe já pronto do controller
+      replyTo: process.env.EMAIL_USER
     });
     console.log("Email enviado com sucesso!");
   } catch (err) {
@@ -27,5 +25,4 @@ async function sendMail(to, subject, html) {
   }
 }
 
-// exporta a função
 module.exports = sendMail;
